@@ -2,6 +2,9 @@
 	"name": "jetex",
 	"version": "0.0.1",
 	"private": true,
+	"prisma": {
+		"seed": "node prisma/seeders/seed.js"
+	},
 	"scripts": {
 		"sass": "sass --watch ./src/stylesheets/:./static/stylesheets/",
 		"vite": "vite dev",
