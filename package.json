@@ -1,0 +1,35 @@
+{
+	"name": "jetex",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"sass": "sass --watch ./src/stylesheets/:./static/stylesheets/",
+		"vite": "vite dev",
+		"dev": "concurrently \"npm run vite\" \"npm run sass\"",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-node": "^5.0.1",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"dotenv": "^16.4.5",
+		"prisma": "^5.11.0",
+		"svelte": "^4.2.7",
+		"svelte-check": "^3.6.0",
+		"typescript": "^5.0.0",
+		"vite": "^5.0.3"
+	},
+	"type": "module",
+	"dependencies": {
+		"@prisma/client": "^5.11.0",
+		"bcrypt": "^5.1.1",
+		"concurrently": "^8.2.2",
+		"moment": "^2.30.1",
+		"node-xlsx": "^0.24.0",
+		"sass": "^1.72.0"
+	}
+}
