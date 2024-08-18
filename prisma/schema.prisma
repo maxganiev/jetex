@@ -7,7 +7,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model test {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
+model pump_types {
+  id          Int                    @id
+  name        String                 @db.Text
+  description String?                @db.Text
+  images      images_to_pump_types[]
+}
+
+model pump_models {
+  id               Int                     @id
+  name             String                  @db.Text
+  pump_type_id     Int
+  pump_duty_points pump_duty_points[]
+  images           images_to_pump_models[]
+}
+
+model pump_duty_points {
+  id            Int         @id @default(autoincrement())
+  pump_model_id Int
+  q             Float       @db.Float
+  h             Float       @db.Float
+  eff           Float       @db.Float
+  p             Float       @db.Float
+  npsh          Float       @db.Float
+  pump_model    pump_models @relation(fields: [pump_model_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model images_to_pump_types {
+  id           Int        @id @default(autoincrement())
+  type_id      Int
+  img_url      String     @db.Text
+  pump_type_id Int
+  pump_type    pump_types @relation(fields: [pump_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model images_to_pump_models {
+  id            Int         @id @default(autoincrement())
+  type_id       Int
+  img_url       String      @db.Text
+  pump_model_id Int
+  pump_model    pump_models @relation(fields: [pump_model_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model attribute_groups {
+  attribute_group_id Int          @id
+  name               String       @db.VarChar(255)
+  sort_order         Int
+  attributes         attributes[]
+}
+
+model attributes {
+  attribute_id             Int                        @id
+  name                     String                     @db.VarChar(255)
+  unit                     String?                    @db.VarChar(255)
+  group_id                 Int
+  group                    attribute_groups           @relation(fields: [group_id], references: [attribute_group_id], onDelete: Cascade, onUpdate: Cascade)
+  attributes_to_pump_types attributes_to_pump_types[]
+  sort_order               Int
+}
+
+model attributes_to_pump_types {
+  id           Int        @id @default(autoincrement())
+  attribute_id Int
+  pump_type_id Int
+  attribute    attributes @relation(fields: [attribute_id], references: [attribute_id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model attribute_values_to_pump_models {
+  id            Int     @id @default(autoincrement())
+  attribute_id  Int
+  pump_model_id Int
+  value         String? @db.Text
 }
