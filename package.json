@@ -16,6 +16,7 @@
 		"start": "PORT=4000 node -r dotenv/config build/index.js"
 	},
 	"devDependencies": {
+		"@iconify/svelte": "^4.0.2",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.0.1",
 		"@sveltejs/kit": "^2.0.0",

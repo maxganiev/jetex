@@ -1,0 +1,300 @@
+@use './vars.scss' as var;
+
+* {
+	&::before,
+	&::after {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		font-weight: 400;
+	}
+}
+
+body {
+	font-family: 'Ubuntu', system-ui !important;
+}
+
+$colors: (
+	'transparent': transparent,
+	'blue': var.$blue,
+	'blue-light': var.$blue-light,
+	'blue-dark': var.$blue-dark,
+	'green': var.$green,
+	'green-light': var.$green-light,
+	'green-dark': var.$green-dark,
+	'white-beige': var.$white-beige,
+	'white': var.$white,
+	'gray-light': var.$gray-light
+);
+@each $key, $value in $colors {
+	.bg-clr-#{$key} {
+		background-color: $value !important;
+	}
+
+	.clr-#{$key} {
+		color: $value !important;
+	}
+
+	.hover-bg-clr-#{$key} {
+		&:hover {
+			background-color: $value !important;
+			transition: background-color 0.4s ease;
+		}
+	}
+
+	.hover-clr-#{$key} {
+		&:hover {
+			color: $value !important;
+			transition: color 0.4s ease;
+		}
+	}
+
+	.hover-box-shadow-#{$key} {
+		&:hover {
+			box-shadow: 1px 1px 2.5px $value !important;
+			transition: box-shadow 0.4s ease;
+		}
+	}
+
+	.active-#{$key} {
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			box-shadow: 1px 1px 2.5px $value !important;
+		}
+	}
+}
+
+$font-weights: (
+	'bold': 700,
+	'semi-bold': 500,
+	'regular': 400,
+	'light': 200
+);
+@each $key, $value in $font-weights {
+	.fw-#{$key} {
+		font-weight: $value !important;
+	}
+}
+
+$font-sizes: (
+	'sm-md': 0.9rem,
+	'md': 1rem,
+	'md-lg': 1.45rem
+);
+@each $key, $value in $font-sizes {
+	.fs-#{$key} {
+		font-size: $value !important;
+	}
+}
+
+$flex-grow-options: (
+	'0-25': 0.25,
+	'0-5': 0.5,
+	'1': 1,
+	'2': 2
+);
+@each $key, $value in $flex-grow-options {
+	.flex-grow-#{$key} {
+		flex-grow: $value;
+	}
+}
+
+$flex-gap-options: (
+	'0-25': 0.25rem,
+	'0-5': 0.5rem,
+	'1': 1rem,
+	'1-5': 1.5rem,
+	'2': 2rem
+);
+@each $key, $value in $flex-gap-options {
+	.flex-column-gap-#{$key} {
+		column-gap: $value;
+	}
+
+	.flex-row-gap-#{$key} {
+		row-gap: $value;
+	}
+}
+
+$positioning-options: (
+	'r': relative,
+	'f': fixed,
+	'a': absolute,
+	'sticky': sticky
+);
+@each $key, $value in $positioning-options {
+	.pos-#{$key} {
+		position: $value;
+	}
+}
+
+.top-left {
+	top: 0;
+	left: 0;
+}
+
+.top-right {
+	top: 0;
+	right: 0;
+}
+
+.bottom-left {
+	bottom: 0;
+	left: 0;
+}
+
+.bottom-right {
+	bottom: 0;
+	right: 0;
+}
+
+$opacity-options: (
+	'0': 0,
+	'0-3': 0.3,
+	'0-6': 0.6,
+	'1': 1
+);
+@each $key, $value in $opacity-options {
+	.o-#{$key} {
+		opacity: $value !important;
+	}
+}
+
+$ratios-options: (
+	'1x1': 1
+);
+@each $key, $value in $ratios-options {
+	.ratio-#{$key} {
+		aspect-ratio: $value !important;
+	}
+}
+
+$sizes: (
+	'0': 0px,
+	'5': 5%,
+	'15': 15%,
+	'20': 20%,
+	'30': 30%,
+	'35': 35%,
+	'40': 40%,
+	'45': 45%,
+	'60': 60%,
+	'65': 65%,
+	'80': 80%,
+	'85': 85%,
+	'95': 95%,
+	'35-vw': 35vw,
+	'40-vw': 40vw,
+	'45-vw': 45vw,
+	'50-vw': 50vw,
+	'65-vw': 65vw,
+	'5-vh': 5vh,
+	'10-vh': 10vh,
+	'15-vh': 15vh,
+	'20-vh': 20vh,
+	'25-vh': 25vh,
+	'30-vh': 30vh,
+	'40-vh': 40vh,
+	'45-vh': 45vh,
+	'50-vh': 50vh,
+	'65-vh': 65vh,
+	'75-vh': 75vh,
+	'85-vh': 85vh,
+	'100-vh': 100vh,
+	'150-vh': 150vh
+);
+@each $key, $value in $sizes {
+	.w-#{$key} {
+		width: $value !important;
+	}
+	.h-#{$key} {
+		min-height: $value !important;
+	}
+}
+
+.no-scrollbars {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.no-select {
+	user-select: none !important;
+}
+
+.object-fit-contain {
+	object-fit: contain;
+}
+
+.scroll-snap-start {
+	scroll-snap-align: start;
+}
+
+$overflow-options: (
+	'scroll': scroll,
+	'hidden': hidden
+);
+@each $key, $value in $overflow-options {
+	.overflow-x-#{$key} {
+		overflow-x: $value !important;
+	}
+
+	.overflow-y-#{$key} {
+		overflow-y: $value !important;
+	}
+}
+
+$pointer-options: (
+	'none': none,
+	'all': all
+);
+@each $key, $value in $pointer-options {
+	.pointer-#{$key} {
+		pointer-events: $value !important;
+	}
+}
+
+$z-index-options: (
+	'1': 1,
+	'2': 2,
+	'n-1': -1
+);
+@each $key, $value in $z-index-options {
+	.z-#{$key} {
+		z-index: $value !important;
+	}
+}
+
+$cursor-options: (
+	'pointer': pointer
+);
+@each $key, $value in $cursor-options {
+	.cursor-#{$key} {
+		cursor: $value !important;
+	}
+}
+
+$hover-scale-options: (
+	'1-01': 1.01
+);
+@each $key, $value in $hover-scale-options {
+	.hover-scale-#{$key} {
+		&:hover {
+			transition: all 0.4s ease;
+			transform: scale($value) !important;
+		}
+	}
+}
+
+//Bootstrap defaul classes redefine
+.row {
+	margin: 0 !important;
+}

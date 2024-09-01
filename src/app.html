@@ -1,12 +1,17 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru" class="no-scrollbars">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<!-- <link rel="icon" href="%sveltekit.assets%/favicon.png" /> -->
+		<link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet preload prefetch" href="/assets/fonts/Ubuntu.css" as="style" />
+		<link rel="stylesheet preload prefetch" href="/bootstrap/bootstrap.css" as="style" />
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<script src="/static/external_scripts/canvasjs.min.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<div class="d-flex flex-column h-100-vh pos-r">%sveltekit.body%</div>
 	</body>
 </html>

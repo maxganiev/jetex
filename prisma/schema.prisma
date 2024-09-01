@@ -11,6 +11,7 @@ model pump_types {
   id          Int                    @id
   name        String                 @db.Text
   description String?                @db.Text
+  short_desc  String?                @db.Text
   images      images_to_pump_types[]
 }
 

@@ -1,5 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import excelToJson from './excelToJson.js';
+import getAllPumpTypes from './api_test_functions/getAllPumpTypes.js';
+import getAttributesToSelectedPumpTypes from './api_test_functions/getAttributesToSelectedPumpTypes.js';
+import getPumpModelByDutyPoint from './api_test_functions/getPumpModelByDutyPoint.js';
+import getAttributeValuesToPumpModel from './api_test_functions/getAttributeValuesToPumpModel.js';
+import getImagesToPumpModel from './api_test_functions/getImagesToPumpModel.js';
+import seedPumpTypesShortDescs from './seedPumpTypesShortDescs.js';
+
 const prisma = new PrismaClient();
 
 class Seeder {
@@ -21,7 +28,7 @@ class Seeder {
 	}
 }
 
-async function seed() {
+async function massSeedDb() {
 	const pump_types = new Seeder('pump_types'),
 		pump_models = new Seeder('pump_models'),
 		pump_duty_points = new Seeder('pump_duty_points'),
@@ -53,7 +60,26 @@ async function seed() {
 	]);
 }
 
-seed()
+async function testApiQuery(/**@type {Function} */ functionToTest, /**@type {any[]} */ args) {
+	functionToTest.apply(null, args);
+}
+
+//testApiQuery(getPumpModelByDutyPoint, [prisma, { pump_type_id: 2, q: 1.4, h: 15.6 }])
+//testApiQuery(getAttributeValuesToPumpModel, [prisma, 7])
+//testApiQuery(getAttributesToSelectedPumpTypes, [prisma, [1, 4]])
+
+async function rewriteAttributeValuesToPumpModels() {
+	const attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models');
+
+	await prisma.attribute_values_to_pump_models.createMany({
+		data: attribute_values_to_pump_models.data.map((item) =>
+			Object.assign({}, { ...item, value: item.value?.toString() || null })
+		)
+	});
+}
+
+await seedPumpTypesShortDescs(prisma);
+rewriteAttributeValuesToPumpModels()
 	.then(async () => {
 		await prisma.$disconnect();
 	})

@@ -1,3 +1,3 @@
 export const globals = {
-	imagePath: '/assets/images/',
+	imagePath: '/preview/images?f='
 };
