@@ -17,17 +17,12 @@
 </script>
 
 <div
-	class="alert alert-{type} pos-a z-1 w-80 p-4 text-center"
+	class="alert alert-{type} pos-f top-left z-2 w-100 p-3 text-center"
 	role="alert"
 	in:fly="{{ duration: 1200, y: -200, easing: bounceInOut }}"
 >
 	<Icon {icon} style="color: inherit" width="1.5em" height="1.5em" />
-	{msg}
+	<strong class="fs-sm-md">
+		{msg}
+	</strong>
 </div>
-
-<style lang="scss" scoped>
-	.alert {
-		top: 0;
-		left: 10%;
-	}
-</style>

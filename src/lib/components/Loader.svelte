@@ -2,7 +2,7 @@
 	import { globals } from '$lib/globals';
 </script>
 
-<div class="w-100 h-100 pos-a top-left z-2 d-flex align-items-center justify-content-center bg-clr-white-beige o-0-3">
+<div class="w-100 h-100 pos-f top-left z-2 d-flex align-items-center justify-content-center bg-clr-white-beige o-0-3">
 	<img
 		class="w-30 object-fit-contain logo-loader"
 		alt="jetex logo"

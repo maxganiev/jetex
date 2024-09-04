@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { IS_MOBILE, SHOW_LOADER, ALERT } from '$lib/stores/ui';
+	import { IS_MOBILE, SHOW_LOADER, ALERT, SHOW_SELECTION_HISTORY } from '$lib/stores/ui';
 
 	//Компоненты
 	import GutterXY from '$lib/components/Gutters/GutterXY.svelte';
@@ -8,7 +8,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Alert from '$lib/components/Alert.svelte';
-	import Filter from '$lib/components/Filter.svelte';
+	import SelectionHistory from '$lib/components/SelectionHistory.svelte';
 
 	/**@type {Number}*/
 	let innerWidth,
@@ -47,7 +47,17 @@
 			<Alert type="{$ALERT.type}" msg="{$ALERT.msg}" />
 		{/if}
 
-		<Filter />
+		{#if $SHOW_SELECTION_HISTORY}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+			<div
+				role="region"
+				class="pos-f top-left w-100 h-100 bg-clr-transparent z-2 d-flex justify-content-end"
+				on:click|self="{() => ($SHOW_SELECTION_HISTORY = false)}"
+			>
+				<SelectionHistory />
+			</div>
+		{/if}
 		<slot />
 	</GutterXY>
 </main>

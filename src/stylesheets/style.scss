@@ -82,9 +82,11 @@ $font-weights: (
 }
 
 $font-sizes: (
+	'sm': 0.75rem,
 	'sm-md': 0.9rem,
 	'md': 1rem,
-	'md-lg': 1.45rem
+	'md-lg': 1.45rem,
+	'lg': 2rem
 );
 @each $key, $value in $font-sizes {
 	.fs-#{$key} {
@@ -193,6 +195,7 @@ $sizes: (
 	'45-vw': 45vw,
 	'50-vw': 50vw,
 	'65-vw': 65vw,
+	'100-vw': 100vw,
 	'5-vh': 5vh,
 	'10-vh': 10vh,
 	'15-vh': 15vh,
@@ -294,7 +297,17 @@ $hover-scale-options: (
 	}
 }
 
+.no-bullets {
+	list-style-type: none !important;
+}
+
 //Bootstrap defaul classes redefine
 .row {
 	margin: 0 !important;
+}
+
+@media (min-width: 1400px) {
+	.mb-xxl-5 {
+		margin-bottom: 6rem !important;
+	}
 }

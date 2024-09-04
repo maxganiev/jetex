@@ -12,8 +12,6 @@
 	import { ALERT, IS_MOBILE, SHOW_LOADER } from '$lib/stores/ui';
 
 	async function onSelectionProgress() {
-		if ($CURRENT_STEP_IDX === $SELECTION_STEPS.length - 1) return;
-
 		//Выбираем насосы
 		if ($CURRENT_STEP.id === 1)
 			await $CURRENT_STEP.actionHandler.addItemToHistory($SELECTED_PUMP_TYPE_IDS, 'get_pump_types_attrs');
@@ -49,6 +47,11 @@
 			}
 		}
 
+		//Выводим на ТКП
+		if ($CURRENT_STEP.id === 3)
+			await $CURRENT_STEP.actionHandler.printOffer({ pump_model_id: $SELECTED_PUMP_MODEL_ID });
+
+		if ($CURRENT_STEP_IDX === $SELECTION_STEPS.length - 1) return;
 		CURRENT_STEP_IDX.update((idx) => {
 			idx++;
 			return idx;
@@ -58,38 +61,76 @@
 	function setCurrentStepIdx(/**@type {Number}*/ stepIdx) {
 		CURRENT_STEP_IDX.set(stepIdx);
 	}
+
+	function selectionStepFwd() {
+		if ($CURRENT_STEP_IDX === $SELECTION_STEPS.length - 1) return;
+		CURRENT_STEP_IDX.update((idx) => {
+			idx++;
+			return idx;
+		});
+	}
+
+	function selectionStepBwd() {
+		if ($CURRENT_STEP_IDX === 0) return;
+		CURRENT_STEP_IDX.update((idx) => {
+			idx--;
+			return idx;
+		});
+	}
 </script>
 
 <footer class="bg-clr-gray-light pos-sticky bottom-left w-100 z-1">
 	<GutterXY>
-		<div class="row align-items-end flex-row-gap-1">
-			{#each $SELECTION_STEPS as step, idx (step.id)}
-				<div
-					class="col-xl-1 col-lg-2 col-md-2 col-sm-12 align-items-center d-flex text-center {!$IS_MOBILE
-						? 'flex-column-reverse'
-						: ''}"
-				>
-					<button
-						class="btn rounded-circle bg-clr-blue-dark clr-white ratio-1x1 m{!$IS_MOBILE
-							? 't'
-							: 'e'}-2 o-{step.enabled ? 1 : '0-6'}"
-						style="min-width: 42px;"
-						disabled="{!$SELECTION_STEPS[idx].enabled}"
-						on:click="{() => setCurrentStepIdx(idx)}"
+		{#if !$IS_MOBILE}
+			<!--Desktop-->
+			<div class="row align-items-end flex-row-gap-1">
+				{#each $SELECTION_STEPS as step, idx (step.id)}
+					<div
+						class="col-xl-1 col-lg-2 col-md-2 col-sm-12 align-items-center d-flex text-center flex-column-reverse"
 					>
-						{#if $CURRENT_STEP.id > step.id}
-							<Icon icon="material-symbols:done" style="color: #fff" />
-						{:else}
-							<span> {step.id} </span>
-						{/if}
-					</button>
-					<label class="fs-sm-md clr-blue-dark" for="">{step.type}</label>
-				</div>
-			{/each}
+						<button
+							class="btn rounded-circle bg-clr-blue-dark clr-white ratio-1x1 mt-2 o-{step.enabled
+								? 1
+								: '0-6'}"
+							style="min-width: 42px;"
+							disabled="{!$SELECTION_STEPS[idx].enabled}"
+							on:click="{() => setCurrentStepIdx(idx)}"
+						>
+							{#if $CURRENT_STEP.id > step.id}
+								<Icon icon="material-symbols:done" style="color: #fff" />
+							{:else}
+								<span> {step.id} </span>
+							{/if}
+						</button>
+						<label class="fs-sm-md clr-blue-dark" for="">{step.type}</label>
+					</div>
+				{/each}
 
-			<div class="col-md-4 col-sm-12 d-flex ms-auto">
+				<div class="col-md-4 col-sm-12 d-flex ms-auto">
+					<button
+						class="btn w-100 rounded-3 bg-clr-blue-dark clr-white fs-sm-md {$CURRENT_STEP.buttonLabel
+							? 'visible'
+							: 'invisible'}"
+						disabled="{!$CURRENT_STEP.enabled || $SHOW_LOADER || $ALERT.show}"
+						on:click="{onSelectionProgress}"
+					>
+						{$CURRENT_STEP.buttonLabel}
+					</button>
+				</div>
+			</div>
+		{:else}
+			<!--Desktop-->
+			<div class="d-flex flex-column-gap-1">
 				<button
-					class="btn w-100 rounded-3 bg-clr-blue-dark clr-white fs-sm-md {$CURRENT_STEP.buttonLabel
+					class="btn rounded-circle bg-clr-blue-dark border-0 p-0"
+					style="width: 2em; height: 2em;"
+					disabled="{$CURRENT_STEP_IDX === 0}"
+					on:click="{selectionStepBwd}"
+				>
+					<Icon icon="mdi:chevron-left" style="color: #fff" width="2em" height="2em" />
+				</button>
+				<button
+					class="btn rounded-3 bg-clr-blue-dark clr-white flex-grow-1 fs-sm-md {$CURRENT_STEP.buttonLabel
 						? 'visible'
 						: 'invisible'}"
 					disabled="{!$CURRENT_STEP.enabled || $SHOW_LOADER || $ALERT.show}"
@@ -97,7 +138,16 @@
 				>
 					{$CURRENT_STEP.buttonLabel}
 				</button>
+				<button
+					class="btn rounded-circle bg-clr-blue-dark border-0 p-0"
+					style="width: 2em; height: 2em;"
+					disabled="{$CURRENT_STEP_IDX === $SELECTION_STEPS.length - 1 ||
+						!$SELECTION_STEPS[$CURRENT_STEP_IDX + 1].enabled}"
+					on:click="{selectionStepFwd}"
+				>
+					<Icon icon="mdi:chevron-right" style="color: #fff" width="2em" height="2em" />
+				</button>
 			</div>
-		</div>
+		{/if}
 	</GutterXY>
 </footer>

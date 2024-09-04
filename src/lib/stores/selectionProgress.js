@@ -31,14 +31,6 @@ const selSteps = [
 		sheetLabel: 'Выбор модели',
 		actionHandler: pumpModelSelector,
 		buttonLabel: 'Вывести ТКП'
-	},
-
-	{
-		id: 4,
-		type: 'Вывести ТКП',
-		enabled: false,
-		sheetLabel: undefined,
-		actionHandler: pumpModelSelector
 	}
 ];
 

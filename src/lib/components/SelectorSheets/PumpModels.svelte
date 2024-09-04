@@ -9,40 +9,61 @@
 	import { onMount } from 'svelte';
 	import SheetLabel from './SheetLabel.svelte';
 	import { fly } from 'svelte/transition';
+	import { CHARTS_WRAPPER_ELEMS_IDS, SHADOWED_CHARTS_WRAPPER_ELEMS_IDS } from '$lib/stores/immutable';
+	import Tooltip from '../Tooltip.svelte';
+	import { IS_MOBILE } from '$lib/stores/ui';
 
 	export let transitionIn;
 
 	/**
 	 * @type {any[]}
 	 */
-	let charts = [];
+	let charts = [],
+		/**
+		 * @type {any[]}
+		 */
+		shadowCharts = [];
+
+	let mounted = false;
 
 	onMount(() => {
-		drawCharts();
-
+		mounted = true;
 		return () => destroyCharts();
 	});
 
 	function drawCharts() {
 		if (charts.length > 0) destroyCharts();
 
-		charts = [
-			new CanvasJS.Chart('canvasjs-container-h-npsh'),
-			new CanvasJS.Chart('canvasjs-container-eff'),
-			new CanvasJS.Chart('canvasjs-container-p')
-		];
+		charts = $CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
+		shadowCharts = $SHADOWED_CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
+
+		const currentPumpModelQVal = parseInt(
+				currentPumpModel.attributes.find((/**@type {Attribute}*/ n) => n.attribute_id === 1)?.value || 0
+			),
+			currentPumpModelYVal = parseInt(
+				currentPumpModel.attributes.find((/**@type {Attribute}*/ n) => n.attribute_id === 2)?.value || 0
+			);
+
+		// xAxisMinVal = Math.min($DUTY_POINTS.q, currentPumpModelQVal) - 2.5,
+		// xAxisMaxVal = Math.max($DUTY_POINTS.q, currentPumpModelQVal) + 2.5;
+
+		const titleFontSize = !$IS_MOBILE ? 14 : 12;
 
 		charts[0].options = {
 			animationEnabled: true,
 			axisX: {
 				title: 'Расход, м. куб./час',
-				titleFontSize: 14,
-				titleFontWeight: 700
+				titleFontSize,
+				titleFontWeight: 700,
+				gridColor: '#969ba5',
+				gridThickness: 1,
+				minimum: 0
 			},
 			axisY: {
 				title: 'Напор/ NPSHr, м',
-				titleFontSize: 14,
-				titleFontWeight: 700
+				titleFontSize,
+				titleFontWeight: 700,
+				gridColor: '#969ba5'
 			},
 			data: [
 				{
@@ -71,13 +92,17 @@
 			animationEnabled: true,
 			axisX: {
 				title: 'Расход, м. куб./час',
-				titleFontSize: 14,
-				titleFontWeight: 700
+				titleFontSize,
+				titleFontWeight: 700,
+				gridColor: '#969ba5',
+				gridThickness: 1,
+				minimum: 0
 			},
 			axisY: {
 				title: 'КПД, %',
-				titleFontSize: 14,
-				titleFontWeight: 700
+				titleFontSize,
+				titleFontWeight: 700,
+				gridColor: '#969ba5'
 			},
 			data: [
 				{
@@ -96,12 +121,15 @@
 			animationEnabled: true,
 			axisX: {
 				title: 'Расход, м. куб./час',
-				titleFontSize: 14,
-				titleFontWeight: 700
+				titleFontSize,
+				titleFontWeight: 700,
+				gridColor: '#969ba5',
+				gridThickness: 1,
+				minimum: 0
 			},
 			axisY: {
 				title: 'Мощность, кВт',
-				titleFontSize: 14,
+				titleFontSize,
 				titleFontWeight: 700
 			},
 			data: [
@@ -126,7 +154,7 @@
 				color: '#f0c630',
 				markerSize: 12.5,
 				dataPoints: [{ x: $DUTY_POINTS.q || 0, y: $DUTY_POINTS.h }],
-				toolTipContent: 'Расход запр.: {x} м3/ч, Напор запр: {y},кВт'
+				toolTipContent: 'Расход запр.: {x} м3/ч, Напор запр: {y},м'
 			},
 			dpActual = {
 				type: 'scatter',
@@ -137,19 +165,11 @@
 				markerSize: 12.5,
 				dataPoints: [
 					{
-						x: parseInt(
-							currentPumpModel.attributes.find(
-								(/**@type {Attribute}*/ n) => n.attribute_id === 1
-							)?.value || 0
-						),
-						y: parseInt(
-							currentPumpModel.attributes.find(
-								(/**@type {Attribute}*/ n) => n.attribute_id === 2
-							)?.value || 0
-						)
+						x: currentPumpModelQVal,
+						y: currentPumpModelYVal
 					}
 				],
-				toolTipContent: 'Расход факт.: {x} м3/ч, Напор факт: {y},кВт'
+				toolTipContent: 'Расход факт.: {x} м3/ч, Напор факт: {y},м'
 			};
 
 		const firstChart = charts[0];
@@ -166,11 +186,34 @@
 		if (dpActualIdx !== -1) firstChart.options.data.splice(dpActualIdx, 1);
 		firstChart.options.data.push(dpActual);
 
-		charts.forEach((chart) => chart.render());
+		charts.forEach((chart, idx) => {
+			//shadowCharts[idx].options = chart.options;
+
+			shadowCharts[idx].options = JSON.parse(JSON.stringify(chart.options));
+			shadowCharts[idx].options.animationEnabled = false;
+
+			shadowCharts[idx].options.axisX.titleFontWeight =
+				shadowCharts[idx].options.axisX.labelFontWeight =
+				shadowCharts[idx].options.axisY.titleFontWeight =
+				shadowCharts[idx].options.axisY.labelFontWeight =
+					'lighter';
+
+			shadowCharts[idx].options.axisX.titleFontSize =
+				shadowCharts[idx].options.axisX.labelFontSize =
+				shadowCharts[idx].options.axisY.titleFontSize =
+				shadowCharts[idx].options.axisY.labelFontSize =
+					20;
+
+			chart.render();
+			shadowCharts[idx].render();
+		});
 	}
 
 	function destroyCharts() {
-		charts.forEach((chart) => chart.destroy());
+		charts.forEach((chart, idx) => {
+			chart.destroy();
+			shadowCharts[idx].destroy();
+		});
 	}
 
 	/**@type {PumpModel}*/
@@ -187,12 +230,22 @@
 	 * @param {Number} id
 	 */
 	async function selectPumpModel(id) {
-		SELECTED_PUMP_MODEL_ID.update((v) => (v = id));
+		SELECTED_PUMP_MODEL_ID.set(id);
 
-		await $CURRENT_STEP.actionHandler.addItemToHistory($SELECTED_PUMP_MODEL_ID, 'get_pump_model_by_id');
-		currentPumpModel = $SELECTION_STEPS[2].actionHandler.history[$SELECTED_PUMP_MODEL_ID];
+		await $CURRENT_STEP.actionHandler.addItemToHistory(id, 'get_pump_model_by_id');
+		currentPumpModel = $SELECTION_STEPS[2].actionHandler.history[id];
 		drawCharts();
 	}
+
+	//Перерисовываем морду, когда компонент смонтировался
+	//и айди модели добавилась в историю
+	$: $SELECTED_PUMP_MODEL_ID,
+		(() => {
+			if ($SELECTION_STEPS[2].actionHandler.history[$SELECTED_PUMP_MODEL_ID] && mounted) {
+				currentPumpModel = $SELECTION_STEPS[2].actionHandler.history[$SELECTED_PUMP_MODEL_ID];
+				drawCharts();
+			}
+		})();
 </script>
 
 <div {...$$restProps} class="scroll-snap-start pb-1" in:fly="{transitionIn}">
@@ -205,16 +258,17 @@
 				class="w-100 no-scrollbars overflow-x-scroll d-flex flex-nowrap flex-column-gap-1 pos-sticky bottom-left"
 			>
 				{#each $SELECTION_STEPS[2].actionHandler.listOfItems as item}
-					<button
-						class="btn btn-sm rounded bg-clr-blue clr-white o-{Number(item.id) ===
-						currentPumpModel.id
-							? 1
-							: '0-6'}"
-						title="{item.name}"
-						on:click="{() => selectPumpModel(item.id)}"
-					>
-						{chipModelName(item.name)}
-					</button>
+					<Tooltip tipContent="{item.name}">
+						<button
+							class="btn btn-sm rounded bg-clr-blue clr-white o-{Number(item.id) ===
+							currentPumpModel.id
+								? 1
+								: '0-6'}"
+							on:click="{() => selectPumpModel(item.id)}"
+						>
+							{chipModelName(item.name)}
+						</button>
+					</Tooltip>
 				{/each}
 			</div>
 		</div>
@@ -224,10 +278,10 @@
 			<h4 class="fs-md-lg">{currentPumpModel.name}</h4>
 		</div>
 
-		<div class="col-md-6 sol-sm-12 d-flex flex-column flex-row-gap-0-5">
-			<div class="w-100 h-30-vh" id="canvasjs-container-h-npsh"></div>
-			<div class="w-100 h-30-vh" id="canvasjs-container-eff"></div>
-			<div class="w-100 h-30-vh" id="canvasjs-container-p"></div>
+		<div class="col-md-6 sol-sm-12 d-flex flex-column flex-row-gap-{!$IS_MOBILE ? '0-5' : 1}">
+			{#each $CHARTS_WRAPPER_ELEMS_IDS as wrapperId}
+				<div class="w-100 h-{!$IS_MOBILE ? 30 : 50}-vh" id="{wrapperId}"></div>
+			{/each}
 		</div>
 		<div class="col-md-6 col-sm-12 bg-clr-white-beige rounded-3 p-4">
 			<div class="list-of-attributes fs-sm-md">
@@ -256,6 +310,12 @@
 				{/each}
 			</div>
 		</div>
+
+		<div class="com-md-12 w-100 shadow-charts-wrapper">
+			{#each $SHADOWED_CHARTS_WRAPPER_ELEMS_IDS as wrapperId}
+				<div class="_chart" id="{wrapperId}"></div>
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -268,5 +328,17 @@
 	.col-1-span-3 {
 		grid-column: 1/3;
 		padding: 1rem 0 0.25rem 0;
+	}
+
+	.shadow-charts-wrapper {
+		position: fixed;
+		visibility: hidden;
+		z-index: -10000;
+		pointer-events: none;
+
+		._chart {
+			width: 800px;
+			height: 250px;
+		}
 	}
 </style>
