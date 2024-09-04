@@ -27,7 +27,10 @@ export function ajax(options) {
 			try {
 				const request = await fetch(options.url, {
 						method: 'POST',
-						body: JSON.stringify(options.params)
+						body: JSON.stringify(options.params),
+						headers: {
+							'Content-Type': 'application/json'
+						}
 					}),
 					response = await request.text();
 				SHOW_LOADER.set(false);
