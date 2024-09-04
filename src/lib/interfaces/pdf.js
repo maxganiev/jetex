@@ -8,9 +8,9 @@ export class Pdf {
 	static fontSizes = {
 		vsm: '8px',
 		sm: '10px',
-		mid: '16px',
-		lg: '24px',
-		vlg: '35px'
+		mid: '14px',
+		lg: '22px',
+		vlg: '30px'
 	};
 
 	static colors = {

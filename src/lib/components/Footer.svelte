@@ -119,8 +119,8 @@
 				</div>
 			</div>
 		{:else}
-			<!--Desktop-->
-			<div class="d-flex flex-column-gap-1">
+			<!--Mobile-->
+			<div class="d-flex flex-column-gap-1 my-3 mx-0">
 				<button
 					class="btn rounded-circle bg-clr-blue-dark border-0 p-0"
 					style="width: 2em; height: 2em;"

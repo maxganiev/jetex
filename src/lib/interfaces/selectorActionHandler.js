@@ -172,6 +172,7 @@ export class PumpModelSelector extends SelectorActionHandler {
 			bottom: 35px;
 			left: 0;
 			background: ${Pdf.colors['blue-dark']};
+			font-size: ${Pdf.fontSizes.sm};
 			height: 20px;
 			width: 100%;
 			z-index: 1;
@@ -226,8 +227,8 @@ export class PumpModelSelector extends SelectorActionHandler {
 		const styleFixesByPumpTypeIds = {
 				1: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingWidth: 60 },
 				2: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingWidth: 60 },
-				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 7, drawingWidth: 95 },
-				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 6, drawingWidth: 75 }
+				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 5, drawingWidth: 95 },
+				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 5, drawingWidth: 75 }
 			},
 			currStyleFix = styleFixesByPumpTypeIds[currentPumpModel.pump_type_id];
 

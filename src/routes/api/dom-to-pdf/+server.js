@@ -16,7 +16,12 @@ export async function POST(/**@type {any}*/ { request }) {
 			const constructedFilePath = await new Promise((resolve, reject) => {
 				pdf.create(requestData.content, {
 					phantomArgs: ['--local-url-access=false'],
-					orientation: pageOrientation
+					orientation: pageOrientation,
+					childProcessOptions: {
+						env: {
+							OPENSSL_CONF: '/dev/null'
+						}
+					}
 				}).toFile(fileName, (err, res) => {
 					if (err) reject(err);
 					resolve(res);
