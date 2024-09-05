@@ -33,6 +33,6 @@
 	<title>Конфигуратор насосов JETEX</title>
 </svelte:head>
 
-<div class="no-scrollbars selector-sheets-wrapper overflow-x-hidden">
+<div class="no-scrollbars selector-sheets-wrapper overflow-y-hidden overflow-x-hidden">
 	<svelte:component this="{componentToRender.comp}" {...componentToRender.props} />
 </div>

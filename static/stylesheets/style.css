@@ -824,10 +824,4 @@ body {
   margin: 0 !important;
 }
 
-@media (min-width: 1400px) {
-  .mb-xxl-5 {
-    margin-bottom: 6rem !important;
-  }
-}
-
 /*# sourceMappingURL=style.css.map */
