@@ -1,7 +1,7 @@
 <script>
 	import { globals } from '$lib/globals';
 	import { SELECTED_PUMP_TYPE_IDS, SELECTION_STEPS } from '$lib/stores/selectionProgress';
-	import { IS_MOBILE } from '$lib/stores/ui';
+	import { IS_MOBILE, MAIN_CONTAINER_RECT_DIMS } from '$lib/stores/ui';
 	import { PumpType } from '$lib/types';
 	import SheetLabel from './SheetLabel.svelte';
 	import { fly } from 'svelte/transition';
@@ -9,12 +9,13 @@
 	/**@type {PumpType[]}*/
 	export let pumpTypes = [],
 		transitionIn;
+
+	$: sheetHeight = `calc(${$MAIN_CONTAINER_RECT_DIMS.height}px - 2rem)`;
 </script>
 
-<div {...$$restProps} class="scroll-snap-start pb-1" in:fly="{transitionIn}">
-	<div class="row flex-row-gap-1">
+<div {...$$restProps} class="scroll-snap-start pb-1" in:fly="{transitionIn}" style="height: {sheetHeight}">
+	<div class="row flex-row-gap-1 h-100">
 		<SheetLabel text="{$SELECTION_STEPS[0].sheetLabel}" />
-		<div class="col-sm-12 w-100 h-100 mb-xxl-5"></div>
 		{#each pumpTypes as type (type.id)}
 			<div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12">
 				<div

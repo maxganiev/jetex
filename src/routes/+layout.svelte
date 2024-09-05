@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { IS_MOBILE, SHOW_LOADER, ALERT, SHOW_SELECTION_HISTORY } from '$lib/stores/ui';
+	import { IS_MOBILE, SHOW_LOADER, ALERT, SHOW_SELECTION_HISTORY, MAIN_CONTAINER_RECT_DIMS } from '$lib/stores/ui';
 
 	//Компоненты
 	import GutterXY from '$lib/components/Gutters/GutterXY.svelte';
@@ -18,6 +18,8 @@
 	onMount(() => {
 		mounted = true;
 		IS_MOBILE.set(innerWidth < breakPoint);
+
+		console.log($MAIN_CONTAINER_RECT_DIMS);
 	});
 
 	$: if (innerWidth) {
@@ -37,7 +39,11 @@
 <svelte:window bind:innerWidth />
 
 <Header />
-<main class="w-100 h-100 flex-grow-1">
+<main
+	class="w-100 h-100 flex-grow-1"
+	bind:offsetHeight="{$MAIN_CONTAINER_RECT_DIMS.height}"
+	bind:offsetWidth="{$MAIN_CONTAINER_RECT_DIMS.width}"
+>
 	<GutterXY>
 		{#if $SHOW_LOADER}
 			<Loader />
