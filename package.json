@@ -13,7 +13,8 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-		"start": "BODY_SIZE_LIMIT=1000000 PORT=4000 node -r dotenv/config build/index.js"
+		"start": "BODY_SIZE_LIMIT=1000000 PORT=4000 node -r dotenv/config build/index.js",
+		"exec": "node ./console/exec.js"
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^4.0.2",

@@ -225,10 +225,10 @@ export class PumpModelSelector extends SelectorActionHandler {
 
 		/**@type {Object<Number, Object>} */
 		const styleFixesByPumpTypeIds = {
-				1: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingWidth: 60 },
-				2: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingWidth: 60 },
-				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 5, drawingWidth: 95 },
-				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 5, drawingWidth: 75 }
+				1: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingHeight: '35%' },
+				2: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingHeight: '35%' },
+				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 5, drawingWidth: '95%' },
+				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 5, drawingWidth: '75%' }
 			},
 			currStyleFix = styleFixesByPumpTypeIds[currentPumpModel.pump_type_id];
 
@@ -432,8 +432,8 @@ export class PumpModelSelector extends SelectorActionHandler {
 						<img src="${
 							origin + currentPumpModel.images.find((image) => image.type_id === 2)?.img_url
 						}" style="margin: 25px auto; width: ${
-						currStyleFix.drawingWidth
-					}%; display: block;"/>
+						currStyleFix.drawingWidth || 'auto'
+					}; height: ${currStyleFix.drawingHeight || 'auto'}; display: block;"/>
 						${row5}
 					</div>
 					`

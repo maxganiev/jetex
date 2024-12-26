@@ -33,7 +33,7 @@ async function massSeedDb() {
 		pump_models = new Seeder('pump_models'),
 		pump_duty_points = new Seeder('pump_duty_points'),
 		attribute_groups = new Seeder('attribute_groups'),
-		attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models'),
+		//attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models'),
 		attributes_to_pump_types = new Seeder('attributes_to_pump_types'),
 		attributes = new Seeder('attributes'),
 		images_to_pump_types = new Seeder('images_to_pump_types'),
@@ -64,22 +64,7 @@ async function testApiQuery(/**@type {Function} */ functionToTest, /**@type {any
 	functionToTest.apply(null, args);
 }
 
-//testApiQuery(getPumpModelByDutyPoint, [prisma, { pump_type_id: 2, q: 1.4, h: 15.6 }])
-//testApiQuery(getAttributeValuesToPumpModel, [prisma, 7])
-//testApiQuery(getAttributesToSelectedPumpTypes, [prisma, [1, 4]])
-
-async function rewriteAttributeValuesToPumpModels() {
-	const attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models');
-
-	await prisma.attribute_values_to_pump_models.createMany({
-		data: attribute_values_to_pump_models.data.map((item) =>
-			Object.assign({}, { ...item, value: item.value?.toString() || null })
-		)
-	});
-}
-
-await seedPumpTypesShortDescs(prisma);
-rewriteAttributeValuesToPumpModels()
+massSeedDb(prisma)
 	.then(async () => {
 		await prisma.$disconnect();
 	})
