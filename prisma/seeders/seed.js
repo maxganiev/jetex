@@ -1,17 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import excelToJson from './excelToJson.js';
-import getAllPumpTypes from './api_test_functions/getAllPumpTypes.js';
-import getAttributesToSelectedPumpTypes from './api_test_functions/getAttributesToSelectedPumpTypes.js';
-import getPumpModelByDutyPoint from './api_test_functions/getPumpModelByDutyPoint.js';
-import getAttributeValuesToPumpModel from './api_test_functions/getAttributeValuesToPumpModel.js';
-import getImagesToPumpModel from './api_test_functions/getImagesToPumpModel.js';
-import seedPumpTypesShortDescs from './seedPumpTypesShortDescs.js';
 
 const prisma = new PrismaClient();
 
 class Seeder {
 	constructor(modelName = '') {
-		this.path = '/upload/db/' + modelName + '.xlsx';
+		this.path = '/upload/db/dec_2024/' + modelName + '.xlsx';
 		this.modelName = modelName;
 
 		const res = excelToJson({ filePath: this.path }),
@@ -29,26 +23,12 @@ class Seeder {
 }
 
 async function massSeedDb() {
-	const pump_types = new Seeder('pump_types'),
-		pump_models = new Seeder('pump_models'),
+	const pump_models = new Seeder('pump_models'),
 		pump_duty_points = new Seeder('pump_duty_points'),
-		attribute_groups = new Seeder('attribute_groups'),
-		//attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models'),
-		attributes_to_pump_types = new Seeder('attributes_to_pump_types'),
-		attributes = new Seeder('attributes'),
-		images_to_pump_types = new Seeder('images_to_pump_types'),
-		images_to_pump_models = new Seeder('images_to_pump_models');
+		images_to_pump_models = new Seeder('images_to_pump_models'),
+		attribute_values_to_pump_models = new Seeder('attribute_values_to_pump_models');
 
-	const listOfSeeders = [
-		pump_types,
-		pump_models,
-		pump_duty_points,
-		attribute_groups,
-		attributes,
-		attributes_to_pump_types,
-		images_to_pump_models,
-		images_to_pump_types
-	];
+	const listOfSeeders = [pump_models, pump_duty_points, images_to_pump_models];
 
 	await prisma.$transaction([
 		...listOfSeeders.map((s) => prisma[s.modelName].createMany({ data: s.data })),
@@ -58,10 +38,6 @@ async function massSeedDb() {
 			)
 		})
 	]);
-}
-
-async function testApiQuery(/**@type {Function} */ functionToTest, /**@type {any[]} */ args) {
-	functionToTest.apply(null, args);
 }
 
 massSeedDb(prisma)

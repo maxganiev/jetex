@@ -10,6 +10,18 @@
 	} from '$lib/stores/selectionProgress';
 	import Icon from '@iconify/svelte';
 	import { ALERT, IS_MOBILE, SHOW_LOADER } from '$lib/stores/ui';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		window.addEventListener('keydown', onEnterKeyDown);
+
+		return () => window.removeEventListener('keydown', onEnterKeyDown);
+	});
+
+	function onEnterKeyDown(/**@type {KeyboardEvent}*/ e) {
+		if (!e || !e.key || e.key !== 'Enter' || !$CURRENT_STEP.enabled || $SHOW_LOADER || $ALERT.show) return;
+		onSelectionProgress();
+	}
 
 	async function onSelectionProgress() {
 		//Выбираем насосы
