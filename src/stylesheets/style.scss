@@ -243,7 +243,8 @@ $sizes: (
 
 $overflow-options: (
 	'scroll': scroll,
-	'hidden': hidden
+	'hidden': hidden,
+	'auto': auto
 );
 @each $key, $value in $overflow-options {
 	.overflow-x-#{$key} {

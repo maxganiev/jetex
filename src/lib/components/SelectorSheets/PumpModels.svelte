@@ -254,9 +254,7 @@
 
 		<div class="col-sm-12">
 			<strong class="fs-sm-md clr-blue-dark pos-r">Вам подойдут:</strong>
-			<div
-				class="w-100 no-scrollbars overflow-x-scroll d-flex flex-nowrap flex-column-gap-1 pos-sticky bottom-left"
-			>
+			<div class="w-100 overflow-x-auto d-flex flex-nowrap flex-column-gap-1 pos-sticky bottom-left py-3">
 				{#each $SELECTION_STEPS[2].actionHandler.listOfItems as item}
 					<Tooltip tipContent="{item.name}">
 						<button

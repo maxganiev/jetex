@@ -787,6 +787,14 @@ body {
   overflow-y: hidden !important;
 }
 
+.overflow-x-auto {
+  overflow-x: auto !important;
+}
+
+.overflow-y-auto {
+  overflow-y: auto !important;
+}
+
 .pointer-none {
   pointer-events: none !important;
 }
