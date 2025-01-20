@@ -832,4 +832,12 @@ body {
   margin: 0 !important;
 }
 
+.border-none {
+  border: none !important;
+}
+
+.outline-none {
+  outline: none !important;
+}
+
 /*# sourceMappingURL=style.css.map */

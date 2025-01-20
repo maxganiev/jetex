@@ -12,6 +12,7 @@
 	import { CHARTS_WRAPPER_ELEMS_IDS, SHADOWED_CHARTS_WRAPPER_ELEMS_IDS } from '$lib/stores/immutable';
 	import Tooltip from '../Tooltip.svelte';
 	import { IS_MOBILE } from '$lib/stores/ui';
+	import RegionOverflow from '../RegionOverflow.svelte';
 
 	export let transitionIn;
 
@@ -254,20 +255,22 @@
 
 		<div class="col-sm-12">
 			<strong class="fs-sm-md clr-blue-dark pos-r">Вам подойдут:</strong>
-			<div class="w-100 overflow-x-auto d-flex flex-nowrap flex-column-gap-1 pos-sticky bottom-left py-3">
-				{#each $SELECTION_STEPS[2].actionHandler.listOfItems as item}
-					<Tooltip tipContent="{item.name}">
-						<button
-							class="btn btn-sm rounded bg-clr-blue clr-white o-{Number(item.id) ===
-							currentPumpModel.id
-								? 1
-								: '0-6'}"
-							on:click="{() => selectPumpModel(item.id)}"
-						>
-							{chipModelName(item.name)}
-						</button>
-					</Tooltip>
-				{/each}
+			<div class="w-100 pos-sticky bottom-left py-3">
+				<RegionOverflow byX>
+					{#each $SELECTION_STEPS[2].actionHandler.listOfItems as item}
+						<Tooltip tipContent="{item.name}">
+							<button
+								class="btn btn-sm rounded bg-clr-blue clr-white o-{Number(item.id) ===
+								currentPumpModel.id
+									? 1
+									: '0-6'}"
+								on:click="{() => selectPumpModel(item.id)}"
+							>
+								{chipModelName(item.name)}
+							</button>
+						</Tooltip>
+					{/each}
+				</RegionOverflow>
 			</div>
 		</div>
 
