@@ -95,6 +95,9 @@ async function massSeedDb() {
 }
 
 async function seedPumpQRangeTable(prisma) {
+	console.log('DB seeded already');
+	return;
+
 	const pump_q_range = new Seeder('apr_2020', 'pump_q_range');
 	await prisma[pump_q_range.modelName].createMany({ data: pump_q_range.data });
 }
