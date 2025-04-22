@@ -30,7 +30,7 @@
 
 		//Подбираем модели по РД
 		if ($CURRENT_STEP.id === 2) {
-			await $CURRENT_STEP.actionHandler.getListOfItems('get_pump_models_by_duty_points', {
+			await $CURRENT_STEP.actionHandler.getListOfItems('get_pump_models_by_duty_points_new', {
 				q: $DUTY_POINTS.q,
 				h: $DUTY_POINTS.h,
 				pump_types: $SELECTED_PUMP_TYPE_IDS.join(',')

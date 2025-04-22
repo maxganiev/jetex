@@ -3,7 +3,8 @@
 		SELECTION_STEPS,
 		SELECTED_PUMP_MODEL_ID,
 		CURRENT_STEP,
-		DUTY_POINTS
+		DUTY_POINTS,
+		REAL_CALCULATED_DUTY_POINTS
 	} from '$lib/stores/selectionProgress';
 	import { PumpModel, Attribute } from '$lib/types';
 	import { onMount } from 'svelte';
@@ -13,6 +14,8 @@
 	import Tooltip from '../Tooltip.svelte';
 	import { IS_MOBILE } from '$lib/stores/ui';
 	import RegionOverflow from '../RegionOverflow.svelte';
+	import { findClosestNumber } from '$lib/utils/findClosestNumber';
+	import { calcPolynomialRegression } from '$lib/utils/calcPolynomialRegression';
 
 	export let transitionIn;
 
@@ -38,12 +41,16 @@
 		charts = $CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
 		shadowCharts = $SHADOWED_CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
 
-		const currentPumpModelQVal = parseInt(
-				currentPumpModel.attributes.find((/**@type {Attribute}*/ n) => n.attribute_id === 1)?.value || 0
-			),
-			currentPumpModelYVal = parseInt(
-				currentPumpModel.attributes.find((/**@type {Attribute}*/ n) => n.attribute_id === 2)?.value || 0
-			);
+		$REAL_CALCULATED_DUTY_POINTS.q = findClosestNumber(
+			Number($DUTY_POINTS.q),
+			currentPumpModel.pump_duty_points.map((dp) => dp.q)
+		);
+		$REAL_CALCULATED_DUTY_POINTS.h = calcPolynomialRegression(
+			Number($DUTY_POINTS.q),
+			currentPumpModel.pump_duty_points.map((dp) => dp.q),
+			currentPumpModel.pump_duty_points.map((dp) => dp.h),
+			2
+		).cubicPolynomial;
 
 		// xAxisMinVal = Math.min($DUTY_POINTS.q, currentPumpModelQVal) - 2.5,
 		// xAxisMaxVal = Math.max($DUTY_POINTS.q, currentPumpModelQVal) + 2.5;
@@ -164,10 +171,11 @@
 				name: 'dp_actual',
 				color: '#f05630',
 				markerSize: 12.5,
+				markerType: 'cross',
 				dataPoints: [
 					{
-						x: currentPumpModelQVal,
-						y: currentPumpModelYVal
+						x: $REAL_CALCULATED_DUTY_POINTS.q,
+						y: $REAL_CALCULATED_DUTY_POINTS.h
 					}
 				],
 				toolTipContent: 'Расход факт.: {x} м3/ч, Напор факт: {y},м'
@@ -295,7 +303,13 @@
 				<div class="col-1-span-3"><strong>Фактические параметры</strong></div>
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [1, 2, 12].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
-					<div><strong>{attr.value}</strong></div>
+					{#if attr.attribute_id === 1}
+						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.q}</strong></div>
+					{:else if attr.attribute_id === 2}
+						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.h}</strong></div>
+					{:else}
+						<div><strong>{attr.value}</strong></div>
+					{/if}
 				{/each}
 
 				<div class="col-1-span-3"><strong>Данные электродвигателя</strong></div>

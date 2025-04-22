@@ -36,6 +36,7 @@ const selSteps = [
 
 export const SELECTED_PUMP_TYPE_IDS = writable([...arrayNumber]),
 	DUTY_POINTS = writable({ q: undefined, h: undefined }),
+	REAL_CALCULATED_DUTY_POINTS = writable({ q: 0, h: 0 }),
 	SELECTED_PUMP_MODEL_ID = writable(undefined),
 	SELECTION_STEPS = derived(
 		[SELECTED_PUMP_TYPE_IDS, DUTY_POINTS, SELECTED_PUMP_MODEL_ID],

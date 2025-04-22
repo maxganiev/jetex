@@ -1,6 +1,6 @@
 import { globals } from '$lib/globals';
 import { SHADOWED_CHARTS_WRAPPER_ELEMS_IDS } from '$lib/stores/immutable';
-import { SELECTION_STEPS, DUTY_POINTS } from '$lib/stores/selectionProgress';
+import { SELECTION_STEPS, DUTY_POINTS, REAL_CALCULATED_DUTY_POINTS } from '$lib/stores/selectionProgress';
 import { PumpType, PumpModel, Attribute } from '$lib/types';
 import { ajax } from '$lib/utils/ajax';
 import { Pdf } from './pdf';
@@ -195,7 +195,7 @@ export class PumpModelSelector extends SelectorActionHandler {
 		/**@type {PumpType} */
 		let currentPumpType;
 		/**@type {Number} */
-		let q, h;
+		let q, h, realQ, realH;
 
 		//store subsribtions
 		const unsubscribe = SELECTION_STEPS.subscribe((steps) => {
@@ -205,6 +205,10 @@ export class PumpModelSelector extends SelectorActionHandler {
 			unsubscribe2 = DUTY_POINTS.subscribe((dp) => {
 				q = dp.q;
 				h = dp.h;
+			}),
+			unsubscribe3 = REAL_CALCULATED_DUTY_POINTS.subscribe((dp) => {
+				realQ = dp.q;
+				realH = dp.h;
 			});
 
 		function tableHeader(/**@type {String}} */ h6) {
@@ -257,22 +261,12 @@ export class PumpModelSelector extends SelectorActionHandler {
 						<tr>
 							<td>Расход Q, м<sup>3</sup>/ч.</td>
 							<td>${q}</td>
-							<td>${
-								currentPumpModel.attributes.find(
-									(/** @type {{ attribute_id: Number; }} */ attr) =>
-										attr.attribute_id === 1
-								).value
-							}</td>
+							<td>${realQ}</td>
 						</tr>
 						<tr>
 							<td>Напор, м.</td>
 							<td>${h}</td>
-							<td>${
-								currentPumpModel.attributes.find(
-									(/** @type {{ attribute_id: Number; }} */ attr) =>
-										attr.attribute_id === 2
-								).value
-							}</td>
+							<td>${realH}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -459,5 +453,6 @@ export class PumpModelSelector extends SelectorActionHandler {
 
 		unsubscribe();
 		unsubscribe2();
+		unsubscribe3();
 	}
 }

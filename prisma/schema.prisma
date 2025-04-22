@@ -80,3 +80,11 @@ model attribute_values_to_pump_models {
   pump_model_id Int
   value         String? @db.Text
 }
+
+model pump_q_range {
+  id            Int   @id @default(autoincrement())
+  pump_type_id  Int
+  pump_model_id Int
+  q_from        Float @db.Float
+  q_to          Float @db.Float
+}

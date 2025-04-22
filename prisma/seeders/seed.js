@@ -4,8 +4,8 @@ import excelToJson from './excelToJson.js';
 const prisma = new PrismaClient();
 
 class Seeder {
-	constructor(modelName = '') {
-		this.path = '/upload/db/mar_2025/' + modelName + '.xlsx';
+	constructor(path, modelName = '') {
+		this.path = '/upload/db/' + (path || 'mar_2025') + '/' + modelName + '.xlsx';
 		this.modelName = modelName;
 
 		const res = excelToJson({ filePath: this.path }),
@@ -23,6 +23,9 @@ class Seeder {
 }
 
 async function massSeedDb() {
+	console.log('DB seeded already');
+	return;
+
 	const pump_models = new Seeder('pump_models'),
 		pump_duty_points = new Seeder('pump_duty_points'),
 		images_to_pump_models = new Seeder('images_to_pump_models'),
@@ -91,7 +94,13 @@ async function massSeedDb() {
 	]);
 }
 
-massSeedDb(prisma)
+async function seedPumpQRangeTable(prisma) {
+	const pump_q_range = new Seeder('apr_2020', 'pump_q_range');
+	await prisma[pump_q_range.modelName].createMany({ data: pump_q_range.data });
+}
+
+//massSeedDb(prisma)
+seedPumpQRangeTable(prisma)
 	.then(async () => {
 		await prisma.$disconnect();
 	})
