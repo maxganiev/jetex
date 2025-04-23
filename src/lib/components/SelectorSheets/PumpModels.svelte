@@ -304,9 +304,9 @@
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [1, 2, 12].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
 					{#if attr.attribute_id === 1}
-						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.q}</strong></div>
+						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.q} м<sup>3</sup>/ч</strong></div>
 					{:else if attr.attribute_id === 2}
-						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.h}</strong></div>
+						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.h} м</strong></div>
 					{:else}
 						<div><strong>{attr.value}</strong></div>
 					{/if}
