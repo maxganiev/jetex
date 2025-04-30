@@ -9,11 +9,33 @@
 	/**@type {PumpType[]}*/
 	export let pumpTypes = [],
 		transitionIn;
+
+	$: allPumpTypesAreSelected = $SELECTED_PUMP_TYPE_IDS.length === pumpTypes.length;
+	$: pumpTypesCheckLabelContent = allPumpTypesAreSelected ? 'Сбросить все' : 'Выбрать все';
+
+	function toggleAllPumpTypesSelection() {
+		$SELECTED_PUMP_TYPE_IDS = allPumpTypesAreSelected ? [] : pumpTypes.map((pt) => pt.id);
+	}
 </script>
 
 <div {...$$restProps} class="scroll-snap-start pb-1" in:fly="{transitionIn}">
 	<div class="row flex-row-gap-1 h-100">
-		<SheetLabel text="{$SELECTION_STEPS[0].sheetLabel}" />
+		<SheetLabel text="{$SELECTION_STEPS[0].sheetLabel}">
+			<div class="flex-grow-1 d-flex justify-content-end">
+				<div class="form-check form-switch">
+					<input
+						type="checkbox"
+						class="form-check-input form-check-input-bg-clr-green-light cursor-pointer"
+						bind:checked="{allPumpTypesAreSelected}"
+						on:change="{toggleAllPumpTypesSelection}"
+					/>
+
+					<label class="form-check-label clr-blue-dark fs-sm-md" for=""
+						>{pumpTypesCheckLabelContent}</label
+					>
+				</div>
+			</div>
+		</SheetLabel>
 		<div class="mb-xxl-5"></div>
 		{#each pumpTypes as type (type.id)}
 			<div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-12">

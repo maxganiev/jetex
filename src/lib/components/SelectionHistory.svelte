@@ -16,22 +16,20 @@
 	in:fly="{{ delay: 50, duration: 300, x: 100, easing: backIn }}"
 	out:fly="{{ delay: 50, duration: 300, x: 100, easing: backOut }}"
 >
-	<div class="clr-blue-dark">
+	<div class="clr-blue-dark h-100 d-flex flex-column">
 		<button
-			class="btn btn-sm rounded-circle border-0 bg-clr-transparent p-0"
-			style="width: 2em; height: 2em;"
+			class="btn btn-sm border-0 bg-clr-transparent p-0"
+			style="width: 2em; height: 50px; margin-left: -5px;"
 			on:click="{() => ($SHOW_SELECTION_HISTORY = !$SHOW_SELECTION_HISTORY)}"
 		>
 			<Icon icon="material-symbols:close" style="color: #234c8c" width="2em" height="2em" />
 		</button>
 
-		<br />
-
-		<strong class="fs-md d-block mt-5">Вы выбирали:</strong>
+		<strong class="fs-md d-block mt-2">Вы выбирали:</strong>
 		{#if Object.keys($SELECTION_STEPS[2].actionHandler.history).length === 0}
 			<p class="fs-md pt-4">Здесь пока ничего нет.</p>
 		{:else}
-			<ul class="list no-bullets mt-3">
+			<ul class="list no-bullets mt-3 flex-grow-1 overflow-y-auto" style="overscroll-behavior: contain;">
 				{#each Object.keys($SELECTION_STEPS[2].actionHandler.history) as key, idx (idx)}
 					{@const item = $SELECTION_STEPS[2].actionHandler.history[key]}
 					<li

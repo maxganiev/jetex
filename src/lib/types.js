@@ -87,7 +87,7 @@ export class PumpType {
 	}
 }
 
-class DutyPoint {
+export class DutyPoint {
 	constructor(
 		/**@type {Number} */ id,
 		/**@type {Number} */ pump_model_id,
@@ -117,7 +117,9 @@ export class PumpModel {
 		/**@type {DutyPoint[]} */ pump_duty_points,
 		/**@type {Image[]} */ images,
 		/**@type {Object.<Number, Object>} */ attributes,
-		/**@type {String} */ short_desc
+		/**@type {String} */ short_desc,
+		/**@type {Number} */ q_closest_to_requested,
+		/**@type {Number} */ h_calculated_with_polynom
 	) {
 		this.id = id;
 		this.name = name;
@@ -126,6 +128,8 @@ export class PumpModel {
 		this.images = images.map((img) => new Image(img.id, img.type_id, img.img_url));
 		this.attributes = attributes;
 		this.short_desc = short_desc;
+		this.q_closest_to_requested = q_closest_to_requested;
+		this.h_calculated_with_polynom = h_calculated_with_polynom || -1;
 
 		Object.preventExtensions(this);
 	}

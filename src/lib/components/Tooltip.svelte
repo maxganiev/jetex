@@ -4,6 +4,9 @@
 	/**@type {String}*/
 	export let tipContent;
 
+	/**@type {Number}*/
+	export let showTipTimeout = 2200;
+
 	export let tipStyle = {
 		color: '#fff',
 		background: '#234c8c',
@@ -28,7 +31,7 @@
 	$: if (showTip)
 		setTimeout(() => {
 			showTip = false;
-		}, 2200);
+		}, showTipTimeout);
 </script>
 
 <div role="region" on:mouseenter="{onMouseEnter}" on:mouseleave="{() => (showTip = false)}">

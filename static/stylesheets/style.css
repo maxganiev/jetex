@@ -42,6 +42,11 @@ body {
   box-shadow: 1px 1px 2.5px transparent !important;
 }
 
+.form-check-input-bg-clr-transparent:checked {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
 .bg-clr-blue {
   background-color: #3179b4 !important;
 }
@@ -73,6 +78,11 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 1px 1px 2.5px #3179b4 !important;
+}
+
+.form-check-input-bg-clr-blue:checked {
+  background-color: #3179b4 !important;
+  border-color: #3179b4 !important;
 }
 
 .bg-clr-blue-light {
@@ -108,6 +118,11 @@ body {
   box-shadow: 1px 1px 2.5px #3ea2d8 !important;
 }
 
+.form-check-input-bg-clr-blue-light:checked {
+  background-color: #3ea2d8 !important;
+  border-color: #3ea2d8 !important;
+}
+
 .bg-clr-blue-dark {
   background-color: #234c8c !important;
 }
@@ -139,6 +154,11 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 1px 1px 2.5px #234c8c !important;
+}
+
+.form-check-input-bg-clr-blue-dark:checked {
+  background-color: #234c8c !important;
+  border-color: #234c8c !important;
 }
 
 .bg-clr-green {
@@ -174,6 +194,11 @@ body {
   box-shadow: 1px 1px 2.5px #94c32c !important;
 }
 
+.form-check-input-bg-clr-green:checked {
+  background-color: #94c32c !important;
+  border-color: #94c32c !important;
+}
+
 .bg-clr-green-light {
   background-color: #94c32c !important;
 }
@@ -205,6 +230,11 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 1px 1px 2.5px #94c32c !important;
+}
+
+.form-check-input-bg-clr-green-light:checked {
+  background-color: #94c32c !important;
+  border-color: #94c32c !important;
 }
 
 .bg-clr-green-dark {
@@ -240,6 +270,11 @@ body {
   box-shadow: 1px 1px 2.5px #30853a !important;
 }
 
+.form-check-input-bg-clr-green-dark:checked {
+  background-color: #30853a !important;
+  border-color: #30853a !important;
+}
+
 .bg-clr-white-beige {
   background-color: #fafafa !important;
 }
@@ -271,6 +306,11 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 1px 1px 2.5px #fafafa !important;
+}
+
+.form-check-input-bg-clr-white-beige:checked {
+  background-color: #fafafa !important;
+  border-color: #fafafa !important;
 }
 
 .bg-clr-white {
@@ -306,6 +346,11 @@ body {
   box-shadow: 1px 1px 2.5px #fff !important;
 }
 
+.form-check-input-bg-clr-white:checked {
+  background-color: #fff !important;
+  border-color: #fff !important;
+}
+
 .bg-clr-gray-light {
   background-color: #edf2ef !important;
 }
@@ -337,6 +382,11 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 1px 1px 2.5px #edf2ef !important;
+}
+
+.form-check-input-bg-clr-gray-light:checked {
+  background-color: #edf2ef !important;
+  border-color: #edf2ef !important;
 }
 
 .fw-bold {
@@ -838,6 +888,11 @@ body {
 
 .outline-none {
   outline: none !important;
+}
+
+.btn-sm {
+  max-height: 50px;
+  overflow: hidden;
 }
 
 /*# sourceMappingURL=style.css.map */

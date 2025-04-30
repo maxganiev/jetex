@@ -16,18 +16,26 @@ export async function GET({ request, url }) {
 				min: 0.95,
 				max: 1.2
 			},
-			sql = `SELECT pm.id, pm.name
-			FROM pump_models pm
-			WHERE pm.id IN (
-			SELECT DISTINCT pdp.pump_model_id
-			FROM pump_duty_points pdp
-			WHERE pdp.pump_model_id IN (
-			SELECT pqr.pump_model_id
-			FROM pump_q_range pqr
-			WHERE pqr.pump_type_id IN (${pump_types})
-			AND ${q} BETWEEN pqr.q_from AND pqr.q_to)
-			AND pdp.h BETWEEN ${h} * ${allowanceRange.min} AND ${h} * ${allowanceRange.max}
-			)`,
+			sql = `SELECT
+							pdp.pump_model_id AS id,
+							pm.name,
+							pdp.q AS q_closest_to_requested
+							FROM pump_duty_points pdp
+							INNER JOIN pump_models pm 
+							ON pm.id = pdp.pump_model_id
+							JOIN (
+    					SELECT pump_model_id, MIN(ABS(q - ${q})) as min_diff
+    					FROM pump_duty_points
+    					WHERE pump_model_id IN (
+        			SELECT pump_model_id 
+        			FROM pump_q_range
+        			WHERE pump_type_id IN (${pump_types})
+        			AND ${q} BETWEEN q_from AND q_to)
+    					GROUP BY pump_model_id)
+							closest ON pdp.pump_model_id = closest.pump_model_id 
+          		AND ABS(pdp.q - ${q}) = closest.min_diff
+          		AND pdp.h BETWEEN ${h} * ${allowanceRange.min} AND ${h} * ${allowanceRange.max}
+							ORDER BY pdp.h DESC;`,
 			pumpModelsByDutyPoint = await prisma.$queryRawUnsafe(sql);
 		prisma.$disconnect;
 		return responseSuccess(200, { pumpModelsByDutyPoint });

@@ -67,6 +67,11 @@ $colors: (
 			box-shadow: 1px 1px 2.5px $value !important;
 		}
 	}
+
+	.form-check-input-bg-clr-#{$key}:checked {
+		background-color: $value !important;
+		border-color: $value !important;
+	}
 }
 
 $font-weights: (
@@ -302,7 +307,7 @@ $hover-scale-options: (
 	list-style-type: none !important;
 }
 
-//Bootstrap defaul classes redefine
+//Bootstrap default classes redefine
 .row {
 	margin: 0 !important;
 }
@@ -313,4 +318,9 @@ $hover-scale-options: (
 
 .outline-none {
 	outline: none !important;
+}
+
+.btn-sm {
+	max-height: 50px;
+	overflow: hidden;
 }

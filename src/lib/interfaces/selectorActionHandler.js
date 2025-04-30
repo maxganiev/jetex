@@ -90,7 +90,9 @@ export class PumpModelSelector extends SelectorActionHandler {
 				body.dutyPoints,
 				body.images,
 				[],
-				''
+				'',
+				this.listOfItems.find((item) => item.id === id)?.q_closest_to_requested || 0,
+				-1
 			);
 
 		const unsubscribe = SELECTION_STEPS.subscribe((steps) => {

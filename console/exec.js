@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { calcPolynomialRegression } from '../src/lib/utils/calcPolynomialRegression.js';
 import { findClosestNumber } from '../src/lib/utils/findClosestNumber.js';
+import log from './log.js';
 
 const prisma = new PrismaClient();
 
@@ -147,17 +148,60 @@ const dp = [
 	}
 ];
 
-console.log(
-	calcPolynomialRegression(
-		10,
-		dp.map((n) => n.q),
-		dp.map((n) => n.h)
-	).cubicPolynomial
-);
+// console.log(
+// 	calcPolynomialRegression(
+// 		10,
+// 		dp.map((n) => n.q),
+// 		dp.map((n) => n.h)
+// 	).cubicPolynomial
+// );
 
-console.log(
-	findClosestNumber(
-		10,
-		dp.map((n) => n.q)
-	)
-);
+// console.log(
+// 	findClosestNumber(
+// 		10,
+// 		dp.map((n) => n.q)
+// 	)
+// );
+
+async function get() {
+	try {
+		const q = 12,
+			h = 48,
+			pump_types = 1;
+
+		if (!q || !h || !pump_types) return;
+
+		const allowanceRange = {
+				min: 0.95,
+				max: 1.2
+			},
+			sql = `SELECT
+							pdp.pump_model_id,
+							pdp.q AS q_closest,
+							pm.name
+							FROM pump_duty_points pdp
+							INNER JOIN pump_models pm 
+							ON pm.id = pdp.pump_model_id
+							JOIN (
+    					SELECT pump_model_id, MIN(ABS(q - ${q})) as min_diff
+    					FROM pump_duty_points
+    					WHERE pump_model_id IN (
+        			SELECT pump_model_id 
+        			FROM pump_q_range
+        			WHERE pump_type_id IN (${pump_types})
+        			AND ${q} BETWEEN q_from AND q_to)
+    					GROUP BY pump_model_id)
+							closest ON pdp.pump_model_id = closest.pump_model_id 
+          		AND ABS(pdp.q - ${q}) = closest.min_diff
+          		AND pdp.h BETWEEN ${h} * ${allowanceRange.min} AND ${h} * ${allowanceRange.max}
+							ORDER BY pdp.h DESC;`,
+			pumpModelsByDutyPoint = await prisma.$queryRawUnsafe(sql);
+		prisma.$disconnect;
+		log(pumpModelsByDutyPoint);
+	} catch (/**@type {any} */ error) {
+		prisma.$disconnect;
+		log(error);
+	}
+}
+
+get();

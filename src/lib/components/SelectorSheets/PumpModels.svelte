@@ -14,8 +14,8 @@
 	import Tooltip from '../Tooltip.svelte';
 	import { IS_MOBILE } from '$lib/stores/ui';
 	import RegionOverflow from '../RegionOverflow.svelte';
-	import { findClosestNumber } from '$lib/utils/findClosestNumber';
 	import { calcPolynomialRegression } from '$lib/utils/calcPolynomialRegression';
+	import { DutyPoint } from '$lib/types';
 
 	export let transitionIn;
 
@@ -35,22 +35,55 @@
 		return () => destroyCharts();
 	});
 
+	function addRealPointToCurve() {
+		try {
+			$REAL_CALCULATED_DUTY_POINTS.q = currentPumpModel.q_closest_to_requested;
+
+			if (currentPumpModel.h_calculated_with_polynom < 0)
+				currentPumpModel.h_calculated_with_polynom = calcPolynomialRegression(
+					Number($DUTY_POINTS.q),
+					currentPumpModel.pump_duty_points.map((dp) => dp.q),
+					currentPumpModel.pump_duty_points.map((dp) => dp.h),
+					2
+				).cubicPolynomial;
+
+			$REAL_CALCULATED_DUTY_POINTS.h = currentPumpModel.h_calculated_with_polynom;
+
+			const closestDutyPointIdx = currentPumpModel.pump_duty_points.findIndex(
+					(dp) => dp.q === currentPumpModel.q_closest_to_requested
+				),
+				closestDutyPoint = currentPumpModel.pump_duty_points[closestDutyPointIdx];
+
+			const dynamicDutyPointId = 1e6 * currentPumpModel.id;
+			const dynamicDutyPointIndex = currentPumpModel.pump_duty_points.findIndex(
+				(dp) => dp.id === dynamicDutyPointId
+			);
+
+			const newDynamicDutyPoint = new DutyPoint(
+				dynamicDutyPointId,
+				currentPumpModel.id,
+				currentPumpModel.q_closest_to_requested,
+				$REAL_CALCULATED_DUTY_POINTS.h,
+				closestDutyPoint.eff,
+				closestDutyPoint.p,
+				closestDutyPoint.npsh
+			);
+
+			if (dynamicDutyPointIndex >= 0)
+				currentPumpModel.pump_duty_points.splice(closestDutyPointIdx + 1, 1, newDynamicDutyPoint);
+			else currentPumpModel.pump_duty_points.splice(closestDutyPointIdx + 1, 0, newDynamicDutyPoint);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	function drawCharts() {
 		if (charts.length > 0) destroyCharts();
 
 		charts = $CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
 		shadowCharts = $SHADOWED_CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
 
-		$REAL_CALCULATED_DUTY_POINTS.q = findClosestNumber(
-			Number($DUTY_POINTS.q),
-			currentPumpModel.pump_duty_points.map((dp) => dp.q)
-		);
-		$REAL_CALCULATED_DUTY_POINTS.h = calcPolynomialRegression(
-			Number($DUTY_POINTS.q),
-			currentPumpModel.pump_duty_points.map((dp) => dp.q),
-			currentPumpModel.pump_duty_points.map((dp) => dp.h),
-			2
-		).cubicPolynomial;
+		addRealPointToCurve();
 
 		// xAxisMinVal = Math.min($DUTY_POINTS.q, currentPumpModelQVal) - 2.5,
 		// xAxisMaxVal = Math.max($DUTY_POINTS.q, currentPumpModelQVal) + 2.5;
@@ -266,7 +299,7 @@
 			<div class="w-100 pos-sticky bottom-left py-3">
 				<RegionOverflow byX>
 					{#each $SELECTION_STEPS[2].actionHandler.listOfItems as item}
-						<Tooltip tipContent="{item.name}">
+						<Tooltip tipContent="{item.name}" showTipTimeout="{3000}">
 							<button
 								class="btn btn-sm rounded bg-clr-blue clr-white o-{Number(item.id) ===
 								currentPumpModel.id
@@ -274,7 +307,7 @@
 									: '0-6'}"
 								on:click="{() => selectPumpModel(item.id)}"
 							>
-								{chipModelName(item.name)}
+								{chipModelName(item.name.replace('JETEX ', ''))}
 							</button>
 						</Tooltip>
 					{/each}
@@ -294,13 +327,19 @@
 		</div>
 		<div class="col-md-6 col-sm-12 bg-clr-white-beige rounded-3 p-4">
 			<div class="list-of-attributes fs-sm-md">
-				<div class="col-1-span-3"><strong>Запрашиваемые параметры</strong></div>
+				<div class="col-1-span-3"
+					><strong>Запрашиваемые параметры</strong>
+					<img src="/assets/icons/circle.png" alt="circle" class="icon-tip" />
+				</div>
 				<div class="ps-2"><span>Расход</span></div>
 				<div><strong>{$DUTY_POINTS.q} м<sup>3</sup>/ч</strong></div>
 				<div class="ps-2"><span>Напор</span></div>
 				<div><strong>{$DUTY_POINTS.h} м</strong></div>
 
-				<div class="col-1-span-3"><strong>Фактические параметры</strong></div>
+				<div class="col-1-span-3"
+					><strong>Фактические параметры</strong>
+					<img src="/assets/icons/cross.png" alt="cross" class="icon-tip" /></div
+				>
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [1, 2, 12].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
 					{#if attr.attribute_id === 1}
@@ -355,5 +394,10 @@
 			width: 800px;
 			height: 250px;
 		}
+	}
+
+	.icon-tip {
+		max-width: 15px;
+		margin: 0 0 2.5px 5px;
 	}
 </style>
