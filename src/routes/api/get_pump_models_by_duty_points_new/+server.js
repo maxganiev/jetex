@@ -14,7 +14,7 @@ export async function GET({ request, url }) {
 
 		const allowanceRange = {
 				min: 0.95,
-				max: 1.2
+				max: 1.3
 			},
 			sql = `SELECT
 							pdp.pump_model_id AS id,
