@@ -120,8 +120,8 @@ async function updateData(prisma) {
 }
 
 async function seed() {
-	// console.log('seeded already');
-	// return;
+	console.log('seeded already');
+	return;
 
 	try {
 		await addNewModels(prisma);
