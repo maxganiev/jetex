@@ -118,8 +118,7 @@ export class PumpModel {
 		/**@type {Image[]} */ images,
 		/**@type {Object.<Number, Object>} */ attributes,
 		/**@type {String} */ short_desc,
-		/**@type {Number} */ q_closest_to_requested,
-		/**@type {Number} */ h_calculated_with_polynom
+		/**@type {Number} */ q_closest_to_requested
 	) {
 		this.id = id;
 		this.name = name;
@@ -129,7 +128,6 @@ export class PumpModel {
 		this.attributes = attributes;
 		this.short_desc = short_desc;
 		this.q_closest_to_requested = q_closest_to_requested;
-		this.h_calculated_with_polynom = h_calculated_with_polynom || -1;
 
 		Object.preventExtensions(this);
 	}

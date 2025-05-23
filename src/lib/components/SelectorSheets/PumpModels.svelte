@@ -14,8 +14,6 @@
 	import Tooltip from '../Tooltip.svelte';
 	import { IS_MOBILE } from '$lib/stores/ui';
 	import RegionOverflow from '../RegionOverflow.svelte';
-	import { calcPolynomialRegression } from '$lib/utils/calcPolynomialRegression';
-	import { DutyPoint } from '$lib/types';
 
 	export let transitionIn;
 
@@ -39,39 +37,12 @@
 		try {
 			$REAL_CALCULATED_DUTY_POINTS.q = currentPumpModel.q_closest_to_requested;
 
-			if (currentPumpModel.h_calculated_with_polynom < 0)
-				currentPumpModel.h_calculated_with_polynom = calcPolynomialRegression(
-					Number($DUTY_POINTS.q),
-					currentPumpModel.pump_duty_points.map((dp) => dp.q),
-					currentPumpModel.pump_duty_points.map((dp) => dp.h),
-					2
-				).cubicPolynomial;
-
-			$REAL_CALCULATED_DUTY_POINTS.h = currentPumpModel.h_calculated_with_polynom;
-
 			const closestDutyPointIdx = currentPumpModel.pump_duty_points.findIndex(
 					(dp) => dp.q === currentPumpModel.q_closest_to_requested
 				),
 				closestDutyPoint = currentPumpModel.pump_duty_points[closestDutyPointIdx];
 
-			const dynamicDutyPointId = 1e6 * currentPumpModel.id;
-			const dynamicDutyPointIndex = currentPumpModel.pump_duty_points.findIndex(
-				(dp) => dp.id === dynamicDutyPointId
-			);
-
-			const newDynamicDutyPoint = new DutyPoint(
-				dynamicDutyPointId,
-				currentPumpModel.id,
-				currentPumpModel.q_closest_to_requested,
-				$REAL_CALCULATED_DUTY_POINTS.h,
-				closestDutyPoint.eff,
-				closestDutyPoint.p,
-				closestDutyPoint.npsh
-			);
-
-			if (dynamicDutyPointIndex >= 0)
-				currentPumpModel.pump_duty_points.splice(closestDutyPointIdx + 1, 1, newDynamicDutyPoint);
-			else currentPumpModel.pump_duty_points.splice(closestDutyPointIdx + 1, 0, newDynamicDutyPoint);
+			$REAL_CALCULATED_DUTY_POINTS.h = closestDutyPoint.h;
 		} catch (error) {
 			console.log(error);
 		}
@@ -84,9 +55,6 @@
 		shadowCharts = $SHADOWED_CHARTS_WRAPPER_ELEMS_IDS.map((wrapperId) => new CanvasJS.Chart(wrapperId));
 
 		addRealPointToCurve();
-
-		// xAxisMinVal = Math.min($DUTY_POINTS.q, currentPumpModelQVal) - 2.5,
-		// xAxisMaxVal = Math.max($DUTY_POINTS.q, currentPumpModelQVal) + 2.5;
 
 		const titleFontSize = !$IS_MOBILE ? 14 : 12;
 
