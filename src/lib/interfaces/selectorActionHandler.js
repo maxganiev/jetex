@@ -340,6 +340,18 @@ export class PumpModelSelector extends SelectorActionHandler {
 			else groupedAttributesEnd[key] = groupedAttributes[key];
 		});
 
+		function getUnit(attributeItem) {
+			const attrsIdsWithInbuiltUnitValues =
+				[1, 2, 3].includes(attributeItem.attribute_id) && !attributeItem.value.includes('м');
+
+			return attrsIdsWithInbuiltUnitValues &&
+				attributeItem.value != '-' &&
+				attributeItem.unit != undefined &&
+				attributeItem.unit
+				? ' ' + attributeItem.unit
+				: '';
+		}
+
 		function attrsRow(obj) {
 			return `<table class="table-bordered table-border-collapse" style="width: 100%;">
 				<tr>
@@ -358,7 +370,7 @@ export class PumpModelSelector extends SelectorActionHandler {
 											(item) => `
 																<tr>
 						 											<td>${item.name}</td>
-						 											<td>${item.value}</td>
+						 											<td>${item.value + getUnit(item)}</td>
 																</tr>`
 										)
 										.join('')}
