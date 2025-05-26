@@ -14,6 +14,7 @@
 	import Tooltip from '../Tooltip.svelte';
 	import { IS_MOBILE } from '$lib/stores/ui';
 	import RegionOverflow from '../RegionOverflow.svelte';
+	import { getUnit } from '$lib/utils/getUnit';
 
 	export let transitionIn;
 
@@ -315,20 +316,20 @@
 					{:else if attr.attribute_id === 2}
 						<div><strong>{$REAL_CALCULATED_DUTY_POINTS.h} м</strong></div>
 					{:else}
-						<div><strong>{attr.value}</strong></div>
+						<div><strong>{attr.value + getUnit(attr)}</strong></div>
 					{/if}
 				{/each}
 
 				<div class="col-1-span-3"><strong>Данные электродвигателя</strong></div>
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [49, 51, 52].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
-					<div><strong>{attr.value}</strong></div>
+					<div><strong>{attr.value + getUnit(attr)}</strong></div>
 				{/each}
 
 				<div class="col-1-span-3"><strong>Данные установки</strong></div>
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [18, 19].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
-					<div><strong>{attr.value}</strong></div>
+					<div><strong>{attr.value + getUnit(attr)}</strong></div>
 				{/each}
 			</div>
 		</div>

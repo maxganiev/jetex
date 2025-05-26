@@ -3,6 +3,7 @@ import { SHADOWED_CHARTS_WRAPPER_ELEMS_IDS } from '$lib/stores/immutable';
 import { SELECTION_STEPS, DUTY_POINTS, REAL_CALCULATED_DUTY_POINTS } from '$lib/stores/selectionProgress';
 import { PumpType, PumpModel, Attribute } from '$lib/types';
 import { ajax } from '$lib/utils/ajax';
+import { getUnit } from '$lib/utils/getUnit';
 import { Pdf } from './pdf';
 
 class SelectorActionHandler {
@@ -339,18 +340,6 @@ export class PumpModelSelector extends SelectorActionHandler {
 			if (Number(key) < currStyleFix.attrGroupId) groupedAttributesStart[key] = groupedAttributes[key];
 			else groupedAttributesEnd[key] = groupedAttributes[key];
 		});
-
-		function getUnit(attributeItem) {
-			const attrsIdsWithInbuiltUnitValues =
-				[1, 2, 3].includes(attributeItem.attribute_id) && !attributeItem.value.includes('м');
-
-			return attrsIdsWithInbuiltUnitValues &&
-				attributeItem.value != '-' &&
-				attributeItem.unit != undefined &&
-				attributeItem.unit
-				? ' ' + attributeItem.unit
-				: '';
-		}
 
 		function attrsRow(obj) {
 			return `<table class="table-bordered table-border-collapse" style="width: 100%;">
