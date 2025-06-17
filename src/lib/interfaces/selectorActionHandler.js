@@ -1,6 +1,6 @@
 import { globals } from '$lib/globals';
 import { SHADOWED_CHARTS_WRAPPER_ELEMS_IDS } from '$lib/stores/immutable';
-import { SELECTION_STEPS, DUTY_POINTS, REAL_CALCULATED_DUTY_POINTS } from '$lib/stores/selectionProgress';
+import { SELECTION_STEPS, REAL_CALCULATED_DUTY_POINTS } from '$lib/stores/selectionProgress';
 import { PumpType, PumpModel, Attribute } from '$lib/types';
 import { ajax } from '$lib/utils/ajax';
 import { getUnit } from '$lib/utils/getUnit';
@@ -84,6 +84,8 @@ export class PumpModelSelector extends SelectorActionHandler {
 		//console.log(data);
 
 		const { body } = data,
+			/**@desc Общие даные о подобранной модели отсюда -> getListOfItems*/
+			pumpModelData = this.listOfItems.find((item) => item.id === id) || {},
 			pm = new PumpModel(
 				id,
 				body.pumpModel.name,
@@ -92,8 +94,8 @@ export class PumpModelSelector extends SelectorActionHandler {
 				body.images,
 				[],
 				'',
-				this.listOfItems.find((item) => item.id === id)?.q_closest_to_requested || 0,
-				-1
+				pumpModelData.q_closest_to_requested || 0,
+				{ q: pumpModelData.q_requested, h: pumpModelData.h_requested }
 			);
 
 		const unsubscribe = SELECTION_STEPS.subscribe((steps) => {
@@ -198,21 +200,19 @@ export class PumpModelSelector extends SelectorActionHandler {
 		/**@type {PumpType} */
 		let currentPumpType;
 		/**@type {Number} */
-		let q, h, realQ, realH;
+		let realQ, realH;
 
 		//store subsribtions
 		const unsubscribe = SELECTION_STEPS.subscribe((steps) => {
 				const firstStep = steps[0];
 				currentPumpType = firstStep.actionHandler.history[currentPumpModel.pump_type_id];
 			}),
-			unsubscribe2 = DUTY_POINTS.subscribe((dp) => {
-				q = dp.q;
-				h = dp.h;
-			}),
-			unsubscribe3 = REAL_CALCULATED_DUTY_POINTS.subscribe((dp) => {
+			unsubscribe2 = REAL_CALCULATED_DUTY_POINTS.subscribe((dp) => {
 				realQ = dp.q;
 				realH = dp.h;
-			});
+			}),
+			q = currentPumpModel.dp_requested.q,
+			h = currentPumpModel.dp_requested.h;
 
 		function tableHeader(/**@type {String}} */ h6) {
 			return `
@@ -233,7 +233,7 @@ export class PumpModelSelector extends SelectorActionHandler {
 		/**@type {Object<Number, Object>} */
 		const styleFixesByPumpTypeIds = {
 				1: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingHeight: '35%' },
-				2: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingHeight: '35%' },
+				2: { marginTop: -5, mainImgHeight: 120, attrGroupId: 4, drawingHeight: '35%' },
 				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 5, drawingWidth: '95%' },
 				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 5, drawingWidth: '75%' }
 			},
@@ -456,6 +456,5 @@ export class PumpModelSelector extends SelectorActionHandler {
 
 		unsubscribe();
 		unsubscribe2();
-		unsubscribe3();
 	}
 }

@@ -118,7 +118,8 @@ export class PumpModel {
 		/**@type {Image[]} */ images,
 		/**@type {Object.<Number, Object>} */ attributes,
 		/**@type {String} */ short_desc,
-		/**@type {Number} */ q_closest_to_requested
+		/**@type {Number} */ q_closest_to_requested,
+		/**@type {{q: Number, h: Number}} */ dp_requested
 	) {
 		this.id = id;
 		this.name = name;
@@ -128,6 +129,7 @@ export class PumpModel {
 		this.attributes = attributes;
 		this.short_desc = short_desc;
 		this.q_closest_to_requested = q_closest_to_requested;
+		this.dp_requested = dp_requested;
 
 		Object.preventExtensions(this);
 	}

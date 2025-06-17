@@ -27,7 +27,9 @@ export async function GET({ request, url }) {
         	ELSE
            MAX(pdp.q) 
     			END,
-			 	2) AS q_closest_to_requested
+			 	2) AS q_closest_to_requested,
+				${q} AS q_requested,
+				${h} AS h_requested
 			FROM pump_duty_points pdp
 			INNER JOIN pump_models pm ON pm.id = pdp.pump_model_id
 			JOIN (

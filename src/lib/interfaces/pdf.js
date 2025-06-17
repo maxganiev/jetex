@@ -94,7 +94,7 @@ export class Pdf {
 		} catch (error) {
 			console.log(error);
 			err.showError = true;
-			err.content = `<p> Похоже, у вас заблокированы всплывающие окна, либо установлен блокировщик рекламы. </p> <br/> <p> Для загрузки документа воспользуйтесь <a href="${fileURL}"> ссылкой. </a> </p>`;
+			err.content = `<p> Похоже, у вас заблокированы всплывающие окна, либо установлен блокировщик рекламы. </p> <br/> <p> Для загрузки документа воспользуйтесь <a href="${fileURL}" target="_blank"> ссылкой. </a> </p>`;
 		}
 
 		//free memory resources

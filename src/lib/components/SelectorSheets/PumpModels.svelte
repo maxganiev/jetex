@@ -163,7 +163,7 @@
 				name: 'dp_requested',
 				color: '#f0c630',
 				markerSize: 12.5,
-				dataPoints: [{ x: $DUTY_POINTS.q || 0, y: $DUTY_POINTS.h }],
+				dataPoints: [{ x: currentPumpModel.dp_requested.q, y: currentPumpModel.dp_requested.h }],
 				toolTipContent: 'Расход запр.: {x} м3/ч, Напор запр: {y},м'
 			},
 			dpActual = {
@@ -171,9 +171,8 @@
 				xValueFormatString: '#######.00',
 				yValueFormatString: '#######.00',
 				name: 'dp_actual',
-				color: '#f05630',
+				color: '#234c8c',
 				markerSize: 12.5,
-				markerType: 'cross',
 				dataPoints: [
 					{
 						x: $REAL_CALCULATED_DUTY_POINTS.q,
@@ -301,13 +300,13 @@
 					<img src="/assets/icons/circle.png" alt="circle" class="icon-tip" />
 				</div>
 				<div class="ps-2"><span>Расход</span></div>
-				<div><strong>{$DUTY_POINTS.q} м<sup>3</sup>/ч</strong></div>
+				<div><strong>{currentPumpModel.dp_requested.q} м<sup>3</sup>/ч</strong></div>
 				<div class="ps-2"><span>Напор</span></div>
-				<div><strong>{$DUTY_POINTS.h} м</strong></div>
+				<div><strong>{currentPumpModel.dp_requested.h} м</strong></div>
 
 				<div class="col-1-span-3"
 					><strong>Фактические параметры</strong>
-					<img src="/assets/icons/cross.png" alt="cross" class="icon-tip" /></div
+					<img src="/assets/icons/circle-blue.png" alt="blue circle" class="icon-tip" /></div
 				>
 				{#each currentPumpModel.attributes.filter( (/** @type {Attribute} */ attr) => [1, 2, 12].includes(attr.attribute_id) ) as attr (attr.attribute_id)}
 					<div class="ps-2"><span>{attr.name}</span></div>
