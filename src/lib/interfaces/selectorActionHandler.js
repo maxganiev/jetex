@@ -94,8 +94,8 @@ export class PumpModelSelector extends SelectorActionHandler {
 				body.images,
 				[],
 				'',
-				pumpModelData.q_closest_to_requested || 0,
-				{ q: pumpModelData.q_requested, h: pumpModelData.h_requested }
+				Number(pumpModelData.q_closest_to_requested) || 0,
+				{ q: Number(pumpModelData.q_requested), h: Number(pumpModelData.h_requested) }
 			);
 
 		const unsubscribe = SELECTION_STEPS.subscribe((steps) => {

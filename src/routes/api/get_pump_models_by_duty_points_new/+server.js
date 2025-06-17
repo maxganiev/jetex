@@ -54,8 +54,16 @@ export async function GET({ request, url }) {
 			GROUP BY pdp.pump_model_id, pm.name
       ORDER BY MAX(pdp.h) DESC;`,
 			pumpModelsByDutyPoint = await prisma.$queryRawUnsafe(sql);
-		prisma.$disconnect;
-		return responseSuccess(200, { pumpModelsByDutyPoint });
+
+		//prisma fixes
+		const safeResults = JSON.parse(
+			JSON.stringify(pumpModelsByDutyPoint, (_, value) =>
+				typeof value === 'bigint' ? value.toString() : value
+			)
+		);
+
+		await prisma.$disconnect();
+		return responseSuccess(200, { pumpModelsByDutyPoint: safeResults });
 	} catch (/**@type {any} */ error) {
 		prisma.$disconnect;
 		return responseError(error);
