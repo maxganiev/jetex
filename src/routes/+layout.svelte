@@ -10,10 +10,13 @@
 	import Alert from '$lib/components/Alert.svelte';
 	import SelectionHistory from '$lib/components/SelectionHistory.svelte';
 
+	export let data;
+
 	/**@type {Number}*/
 	let innerWidth,
 		breakPoint = 800,
-		mounted = false;
+		mounted = false,
+		showFooter = data.url.pathname === '/';
 
 	onMount(() => {
 		mounted = true;
@@ -36,7 +39,7 @@
 
 <svelte:window bind:innerWidth />
 
-<Header />
+<Header options="{{ url: data.url }}" />
 <main class="w-100 h-100 flex-grow-1">
 	<GutterXY>
 		{#if $SHOW_LOADER}
@@ -61,4 +64,6 @@
 		<slot />
 	</GutterXY>
 </main>
-<Footer />
+{#if showFooter}
+	<Footer />
+{/if}

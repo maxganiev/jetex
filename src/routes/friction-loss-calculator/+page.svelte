@@ -1,0 +1,385 @@
+<script>
+	import SheetLabel from '$lib/components/SelectorSheets/SheetLabel.svelte';
+	import InputRow from './components/InputRow.svelte';
+	import InputColumn from './components/InputColumn.svelte';
+	import InputCell from './components/InputCell.svelte';
+
+	const TITLE = 'Калькулятор потерь напора в трубопроводе';
+
+	function roundToStage(value = 0, stage = 8) {
+		return Number(value).toFixed(stage);
+	}
+
+	$: qPerHr = 0;
+	$: qPerSec = roundToStage(qPerHr / 3600);
+
+	$: viscosity = 0;
+	$: viscosityPerSec = roundToStage(viscosity / 1000 ** 2);
+
+	$: pipeDMilim = 0;
+	$: pipeDMet = roundToStage(pipeDMilim / 1000);
+
+	$: pipeLength = 0;
+
+	const pipeMaterialOptions = [
+		{ id: 1, text: 'Медь, свинец, латунь, алюминиий', value: '0.001' },
+
+		{ id: 2, text: 'ПВХ и пластиковые трубы', value: '0.0015' },
+
+		{ id: 3, text: 'Подвижные резиновые уплотнители', value: '0.006' },
+
+		{ id: 4, text: 'Нержавеющая сталь', value: '0.0015' },
+
+		{ id: 5, text: 'Стальная труба', value: '0.045' },
+
+		{ id: 6, text: 'Сварная сталь', value: '0.045' },
+
+		{ id: 7, text: 'Углеродистая сталь неиспользованная', value: '0.02' },
+
+		{ id: 8, text: 'Углеродистая сталь с небольшой коррозией', value: '0.05' },
+
+		{ id: 9, text: 'Углеродистая сталь с коррозией средней степени', value: '0.15' },
+
+		{ id: 10, text: 'Углеродистая сталь с коррозией высокой степени', value: '1' },
+
+		{ id: 11, text: 'Афальтированный чугун', value: '0.1' },
+
+		{ id: 12, text: 'Чугун неиспользованный', value: '0.25' },
+
+		{ id: 13, text: 'Изношенный чугун', value: '0.8' },
+
+		{ id: 14, text: 'Ржавый чугун', value: '1.5' },
+
+		{ id: 15, text: 'Оцинкованный чугун', value: '0.025' },
+
+		{ id: 16, text: 'Дерево', value: '0.18' },
+
+		{ id: 17, text: 'Дерево б/у', value: '0.25' },
+
+		{ id: 18, text: 'Смягченный цемент', value: '0.3' },
+
+		{ id: 19, text: 'Обычный цемент', value: '0.3' },
+
+		{ id: 20, text: 'Затверделый цемент', value: '0.8' }
+	];
+
+	$: pipeMaterialSelected = pipeMaterialOptions[0];
+
+	$: averageVelocity = roundToStage(Number(qPerSec) / ((Number(pipeDMet) ** 2 * Math.PI) / 4));
+
+	$: reynoldNum = roundToStage((Number(averageVelocity) * Number(pipeDMet)) / Number(viscosityPerSec));
+
+	$: specificRoughness = Number(pipeMaterialSelected.value) / 1000;
+
+	$: darcyFrictionFactor = (() => {
+		if (Number(reynoldNum) < 3000) return roundToStage(64 / Number(reynoldNum));
+
+		return roundToStage(
+			0.25 /
+				Math.log10(Number(specificRoughness) / Number(pipeDMet) + 5.74 / Number(reynoldNum) ** 0.9) ** 2
+		);
+	})();
+
+	function calcValveHeadVelocity(valveKoeff = -1, valvesQty = -1) {
+		const KOEFF = 2 * 9.81;
+
+		return (valveKoeff * Number(valvesQty) * Number(averageVelocity) ** 2) / KOEFF;
+	}
+
+	const ANGLE_VALVE_KOEFF = 5;
+	$: angleValveQty = 0;
+	$: angleValveVelocity = calcValveHeadVelocity(ANGLE_VALVE_KOEFF, angleValveQty);
+
+	const FOOT_VALVE_KOEFF = 0.9;
+	$: footValveQty = 0;
+	$: footValveVelocity = calcValveHeadVelocity(FOOT_VALVE_KOEFF, footValveQty);
+
+	const BALL_VALVE_KOEFF = 0.05;
+	$: ballValveQty = 0;
+	$: ballValveVelocity = calcValveHeadVelocity(BALL_VALVE_KOEFF, ballValveQty);
+
+	const GATE_VALVE_KOEFF = 0.2;
+	$: gateValveQty = 0;
+	$: gateValveVelocity = calcValveHeadVelocity(GATE_VALVE_KOEFF, gateValveQty);
+
+	const BUTTERFLY_VALVE_KOEFF = 0.6;
+	$: butterflyValveQty = 0;
+	$: butterflyValveVelocity = calcValveHeadVelocity(BUTTERFLY_VALVE_KOEFF, butterflyValveQty);
+
+	const GLOBE_VALVE_KOEFF = 10;
+	$: globeValveQty = 0;
+	$: globeValveVelocity = calcValveHeadVelocity(GLOBE_VALVE_KOEFF, globeValveQty);
+
+	const CHECK_VALVE_KOEFF = 2.3;
+	$: checkValveQty = 0;
+	$: checkValveVelocity = calcValveHeadVelocity(CHECK_VALVE_KOEFF, checkValveQty);
+
+	const PIPE_ENTRANCE_KOEFF = 1;
+	$: pipeEntranceQty = 0;
+	$: pipeEntranceVelocity = calcValveHeadVelocity(PIPE_ENTRANCE_KOEFF, pipeEntranceQty);
+
+	const ELBOW_VALVE_KOEFF = 0.4;
+	$: elbowValveQty = 0;
+	$: elbowValveVelocity = calcValveHeadVelocity(ELBOW_VALVE_KOEFF, elbowValveQty);
+
+	const PIPE_ENTRANCE_SHARP_KOEFF = 0.5;
+	$: pipeEntranceSharpQty = 0;
+	$: pipeEntranceSharpVelocity = calcValveHeadVelocity(PIPE_ENTRANCE_SHARP_KOEFF, pipeEntranceSharpQty);
+
+	const ELBOW_VALVE_90_KOEFF = 0.6;
+	$: elbowValve90Qty = 0;
+	$: elbowValve90Velocity = calcValveHeadVelocity(ELBOW_VALVE_90_KOEFF, elbowValve90Qty);
+
+	const PIPE_EXIT_KOEFF = 1;
+	$: pipeExitQty = 0;
+	$: pipeExitVelocity = calcValveHeadVelocity(PIPE_EXIT_KOEFF, pipeExitQty);
+
+	const ELBOW_VALVE_90_STD_KOEFF = 0.9;
+	$: elbowValve90StandardQty = 0;
+	$: elbowValve90StandardVelocity = calcValveHeadVelocity(ELBOW_VALVE_90_STD_KOEFF, elbowValve90StandardQty);
+
+	const TEE_STD_KOEFF = 1.8;
+	$: teeStdQty = 0;
+	$: teeStdVelocity = calcValveHeadVelocity(TEE_STD_KOEFF, teeStdQty);
+
+	const FLOW_METER_KOEFF = 7;
+	$: flowMeterQty = 0;
+	$: flowMeterVelocity = calcValveHeadVelocity(FLOW_METER_KOEFF, flowMeterQty);
+
+	const TEE_FTR_KOEFF = 0.6;
+	$: teeFtrQty = 0;
+	$: teeFtrVelocity = calcValveHeadVelocity(TEE_FTR_KOEFF, teeFtrQty);
+
+	$: totalFittingsLosses =
+		angleValveVelocity +
+		footValveVelocity +
+		ballValveVelocity +
+		gateValveVelocity +
+		butterflyValveVelocity +
+		globeValveVelocity +
+		checkValveVelocity +
+		pipeEntranceVelocity +
+		elbowValveVelocity +
+		pipeEntranceSharpVelocity +
+		elbowValve90Velocity +
+		elbowValve90StandardVelocity +
+		pipeExitVelocity +
+		teeStdVelocity +
+		flowMeterVelocity;
+
+	$: totalStaightPipesLosses =
+		(Number(darcyFrictionFactor) * pipeLength * Number(averageVelocity) ** 2) / (2 * Number(pipeDMet) * 9.81);
+
+	$: totalPipeLineLosses = totalFittingsLosses + totalStaightPipesLosses;
+
+	/**
+	 * @param {number } value
+	 */
+	function printValidTotal(value) {
+		return value === 0 || isNaN(value) ? 0 : roundToStage(value);
+	}
+</script>
+
+<svelte:head>
+	<title>{TITLE}</title>
+</svelte:head>
+
+<SheetLabel text="{TITLE}"></SheetLabel>
+<br />
+
+<!--Расход-->
+<InputRow>
+	<InputCell label="Расход, м<sup>3</sup>/час" bind:value="{qPerHr}"></InputCell>
+
+	<InputCell label="Расход, м<sup>3</sup>/с" bind:value="{qPerSec}" readonly></InputCell>
+</InputRow>
+
+<!--Вязкость-->
+<InputRow>
+	<InputCell label="Кинематическая вязкость, cst" bind:value="{viscosity}"></InputCell>
+
+	<InputCell label="Кинематическая вязкость, м<sup>3</sup>/с" bind:value="{viscosityPerSec}" readonly></InputCell>
+</InputRow>
+
+<!--Диаметр трубы-->
+<InputRow>
+	<InputCell label="Диаметр трубы, мм" bind:value="{pipeDMilim}"></InputCell>
+
+	<InputCell label="Диаметр трубы, м" bind:value="{pipeDMet}" readonly></InputCell>
+</InputRow>
+
+<!--Длина и материал трубы-->
+<InputRow>
+	<InputCell label="Длина трубы, м" bind:value="{pipeLength}"></InputCell>
+
+	<InputCell
+		label="Выберите материал трубы"
+		bind:value="{pipeMaterialSelected}"
+		type="select"
+		options="{pipeMaterialOptions}"
+	></InputCell>
+</InputRow>
+
+<!--Вычисляемые параметры-->
+<InputRow>
+	<InputCell label="Удельная шероховатость (𝜀), м" bind:value="{specificRoughness}" readonly></InputCell>
+
+	<InputCell label="Средняя скорость, м/с" bind:value="{averageVelocity}" readonly></InputCell>
+</InputRow>
+
+<InputRow>
+	<InputCell label="Число Рейнольдса (Re)" bind:value="{reynoldNum}" readonly></InputCell>
+
+	<InputCell label="Коэффициент трения Дарси (fx)" bind:value="{darcyFrictionFactor}" readonly></InputCell>
+</InputRow>
+
+<InputRow>
+	<!-- Угловой клапан-->
+	<InputColumn>
+		<InputCell label="Количество угловых клапанов" fullWidth bind:value="{angleValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{angleValveVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Ножной клапан-->
+	<InputColumn>
+		<InputCell label="Количество ножных клапанов" fullWidth bind:value="{footValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{footValveVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Шаровой кран, полнопроходной-->
+	<InputColumn>
+		<InputCell label="Количество шаровых клапанов" fullWidth bind:value="{ballValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{ballValveVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Задвижка-->
+	<InputColumn>
+		<InputCell label="Количество задвижек" fullWidth bind:value="{gateValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{gateValveVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Клапан-бабочка -->
+	<InputColumn>
+		<InputCell label="Количество клапанов-бабочек" fullWidth bind:value="{butterflyValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{butterflyValveVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Нормальный клапан-->
+	<InputColumn>
+		<InputCell label="Количество нормальных клапанов" fullWidth bind:value="{globeValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{globeValveVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Обратный поворотный клапан-->
+	<InputColumn>
+		<InputCell label="Количество обратных поворотных клапанов" fullWidth bind:value="{checkValveQty}"
+		></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{checkValveVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Вход трубы, труба, направленная внутрь -->
+	<InputColumn>
+		<InputCell label="Кол-во входов трубы, направленной вовнутрь" fullWidth bind:value="{pipeEntranceQty}"
+		></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{pipeEntranceVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Угловой клапан 45°-->
+	<InputColumn>
+		<InputCell label="Количество угловых клапанов 45°" fullWidth bind:value="{elbowValveQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValveVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Вход трубы, острый край -->
+	<InputColumn>
+		<InputCell label="Кол-во входов трубы с острым краем" fullWidth bind:value="{pipeEntranceSharpQty}"
+		></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{pipeEntranceSharpVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Угловой клапан 90°-->
+	<InputColumn>
+		<InputCell label="Количество угловых клапанов 90° (широкий радиус)" fullWidth bind:value="{elbowValve90Qty}"
+		></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValve90Velocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Кол-во выходов трубы -->
+	<InputColumn>
+		<InputCell label="Кол-во выходов трубы" fullWidth bind:value="{pipeExitQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{pipeExitVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Угловой клапан 90°-->
+	<InputColumn>
+		<InputCell
+			label="Количество угловых клапанов 90° (стандартные)"
+			fullWidth
+			bind:value="{elbowValve90StandardQty}"
+		></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValve90StandardVelocity}" readonly
+		></InputCell>
+	</InputColumn>
+
+	<!--Кол-во стандартных тройников с проточным ответвлением -->
+	<InputColumn>
+		<InputCell label="Кол-во тройников с проточным ответвлением" fullWidth bind:value="{teeStdQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{teeStdVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<InputRow>
+	<!--Расходомер турбинного типа-->
+	<InputColumn>
+		<InputCell label="Кол-во расходомеров турбинного типа" fullWidth bind:value="{flowMeterQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{flowMeterVelocity}" readonly></InputCell>
+	</InputColumn>
+
+	<!--Тройник стандартный проточный-->
+	<InputColumn>
+		<InputCell label="Кол-во проточных тройников" fullWidth bind:value="{teeFtrQty}"></InputCell>
+
+		<InputCell label="Скорость напора" fullWidth bind:value="{teeFtrVelocity}" readonly></InputCell>
+	</InputColumn>
+</InputRow>
+
+<ul class="list no-bullets fs-md p-0 pt-4">
+	<li>
+		Общие потери напора во всех фитингах: <strong>{printValidTotal(totalFittingsLosses)}м</strong>
+	</li>
+
+	<li>
+		Общие потери напора во всех прямых трубах: <strong>{printValidTotal(totalStaightPipesLosses)}м</strong>
+	</li>
+
+	<li>
+		Общие потери напора трубопровода: <strong>{printValidTotal(totalPipeLineLosses)}м</strong>
+	</li>
+</ul>

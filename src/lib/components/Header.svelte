@@ -4,6 +4,11 @@
 	import GutterXY from './Gutters/GutterXY.svelte';
 	import Tooltip from './Tooltip.svelte';
 	import { SHOW_SELECTION_HISTORY } from '$lib/stores/ui';
+
+	/**@type {{[x:string]:any}}*/
+	export let options = {};
+
+	let showTooltipHistory = options.url.pathname === '/';
 </script>
 
 <header class="w-100 bg-clr-white-beige">
@@ -19,15 +24,22 @@
 			</a>
 			<div class="flex-grow-1"></div>
 
-			<Tooltip tipContent="История подбора">
-				<button
-					class="btn btn-sm rounded-circle border-0 bg-clr-transparent p-0"
-					style="width: 2em; height: 2em;"
-					on:click="{() => ($SHOW_SELECTION_HISTORY = !$SHOW_SELECTION_HISTORY)}"
-				>
-					<Icon icon="material-symbols:history" style="color: #234c8c" width="2em" height="2em" />
-				</button>
-			</Tooltip>
+			{#if showTooltipHistory}
+				<Tooltip tipContent="История подбора">
+					<button
+						class="btn btn-sm rounded-circle border-0 bg-clr-transparent p-0"
+						style="width: 2em; height: 2em;"
+						on:click="{() => ($SHOW_SELECTION_HISTORY = !$SHOW_SELECTION_HISTORY)}"
+					>
+						<Icon
+							icon="material-symbols:history"
+							style="color: #234c8c"
+							width="2em"
+							height="2em"
+						/>
+					</button>
+				</Tooltip>
+			{/if}
 		</div>
 	</GutterXY>
 </header>
