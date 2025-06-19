@@ -86,6 +86,10 @@ $font-weights: (
 	}
 }
 
+.font-italic {
+	font-style: italic !important;
+}
+
 $font-sizes: (
 	'sm': 0.75rem,
 	'sm-md': 0.9rem,

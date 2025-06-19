@@ -405,6 +405,10 @@ body {
   font-weight: 200 !important;
 }
 
+.font-italic {
+  font-style: italic !important;
+}
+
 .fs-sm {
   font-size: 0.75rem !important;
 }

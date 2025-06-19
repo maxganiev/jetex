@@ -3,6 +3,7 @@
 	import InputRow from './components/InputRow.svelte';
 	import InputColumn from './components/InputColumn.svelte';
 	import InputCell from './components/InputCell.svelte';
+	import { globals } from '$lib/globals';
 
 	const TITLE = 'Калькулятор потерь напора в трубопроводе';
 
@@ -194,6 +195,17 @@
 <SheetLabel text="{TITLE}"></SheetLabel>
 <br />
 
+<div id="pipes_view" class="w-100">
+	<img
+		src="{globals.imagePath}pipe_transforms.png"
+		alt="pipe views"
+		class="d-block mx-auto"
+		style="max-height: 200px; max-width: 100%;"
+	/>
+
+	<p class="fs-sm-md font-italic text-center clr-blue">Рис.1 Типы трубных переходов </p>
+</div>
+
 <!--Расход-->
 <InputRow>
 	<InputCell label="Расход, м<sup>3</sup>/час" bind:value="{qPerHr}"></InputCell>
@@ -299,7 +311,12 @@
 
 	<!--Вход трубы, труба, направленная внутрь -->
 	<InputColumn>
-		<InputCell label="Кол-во входов трубы, направленной вовнутрь" fullWidth bind:value="{pipeEntranceQty}"
+		<InputCell
+			label="Кол-во трубных переходов <a style='text-decoration: none;
+		font-style: italic;
+		color: inherit; font-weight: 600;' href='#pipes_view'>типа c</a>"
+			fullWidth
+			bind:value="{pipeEntranceQty}"
 		></InputCell>
 
 		<InputCell fullWidth bind:value="{pipeEntranceVelocity}" readonly></InputCell>
@@ -307,16 +324,21 @@
 </InputRow>
 
 <InputRow>
-	<!--Угловой клапан 45°-->
+	<!--Колено 45°-->
 	<InputColumn>
-		<InputCell label="Количество угловых клапанов 45°" fullWidth bind:value="{elbowValveQty}"></InputCell>
+		<InputCell label="Количество колен 45°" fullWidth bind:value="{elbowValveQty}"></InputCell>
 
 		<InputCell fullWidth bind:value="{elbowValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Вход трубы, острый край -->
 	<InputColumn>
-		<InputCell label="Кол-во входов трубы с острым краем" fullWidth bind:value="{pipeEntranceSharpQty}"
+		<InputCell
+			label="Кол-во трубных переходов <a style='text-decoration: none;
+		font-style: italic;
+		color: inherit; font-weight: 600;' href='#pipes_view'>типа d</a>"
+			fullWidth
+			bind:value="{pipeEntranceSharpQty}"
 		></InputCell>
 
 		<InputCell fullWidth bind:value="{pipeEntranceSharpVelocity}" readonly></InputCell>
@@ -324,9 +346,9 @@
 </InputRow>
 
 <InputRow>
-	<!--Угловой клапан 90°-->
+	<!--Колено 90°-->
 	<InputColumn>
-		<InputCell label="Количество угловых клапанов 90° (широкий радиус)" fullWidth bind:value="{elbowValve90Qty}"
+		<InputCell label="Количество колен 90° (широкий радиус)" fullWidth bind:value="{elbowValve90Qty}"
 		></InputCell>
 
 		<InputCell fullWidth bind:value="{elbowValve90Velocity}" readonly></InputCell>
@@ -334,19 +356,16 @@
 
 	<!--Кол-во выходов трубы -->
 	<InputColumn>
-		<InputCell label="Кол-во выходов трубы" fullWidth bind:value="{pipeExitQty}"></InputCell>
+		<InputCell label="Кол-во трубных выходов" fullWidth bind:value="{pipeExitQty}"></InputCell>
 
 		<InputCell fullWidth bind:value="{pipeExitVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
 <InputRow>
-	<!--Угловой клапан 90°-->
+	<!--Колено 90°-->
 	<InputColumn>
-		<InputCell
-			label="Количество угловых клапанов 90° (стандартные)"
-			fullWidth
-			bind:value="{elbowValve90StandardQty}"
+		<InputCell label="Количество колен 90° (стандартные)" fullWidth bind:value="{elbowValve90StandardQty}"
 		></InputCell>
 
 		<InputCell fullWidth bind:value="{elbowValve90StandardVelocity}" readonly></InputCell>
