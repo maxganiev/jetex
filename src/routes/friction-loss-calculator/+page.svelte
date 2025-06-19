@@ -80,75 +80,87 @@
 		);
 	})();
 
-	function calcValveHeadVelocity(valveKoeff = -1, valvesQty = -1) {
+	function calcValveHeadVelocity(valveKoeff = -1, valvesQty = -1, avVelocity = 0) {
 		const KOEFF = 2 * 9.81;
 
-		return (valveKoeff * Number(valvesQty) * Number(averageVelocity) ** 2) / KOEFF;
+		return (valveKoeff * Number(valvesQty) * Number(avVelocity) ** 2) / KOEFF;
 	}
 
 	const ANGLE_VALVE_KOEFF = 5;
 	$: angleValveQty = 0;
-	$: angleValveVelocity = calcValveHeadVelocity(ANGLE_VALVE_KOEFF, angleValveQty);
+	$: angleValveVelocity = calcValveHeadVelocity(ANGLE_VALVE_KOEFF, angleValveQty, Number(averageVelocity));
 
 	const FOOT_VALVE_KOEFF = 0.9;
 	$: footValveQty = 0;
-	$: footValveVelocity = calcValveHeadVelocity(FOOT_VALVE_KOEFF, footValveQty);
+	$: footValveVelocity = calcValveHeadVelocity(FOOT_VALVE_KOEFF, footValveQty, Number(averageVelocity));
 
 	const BALL_VALVE_KOEFF = 0.05;
 	$: ballValveQty = 0;
-	$: ballValveVelocity = calcValveHeadVelocity(BALL_VALVE_KOEFF, ballValveQty);
+	$: ballValveVelocity = calcValveHeadVelocity(BALL_VALVE_KOEFF, ballValveQty, Number(averageVelocity));
 
 	const GATE_VALVE_KOEFF = 0.2;
 	$: gateValveQty = 0;
-	$: gateValveVelocity = calcValveHeadVelocity(GATE_VALVE_KOEFF, gateValveQty);
+	$: gateValveVelocity = calcValveHeadVelocity(GATE_VALVE_KOEFF, gateValveQty, Number(averageVelocity));
 
 	const BUTTERFLY_VALVE_KOEFF = 0.6;
 	$: butterflyValveQty = 0;
-	$: butterflyValveVelocity = calcValveHeadVelocity(BUTTERFLY_VALVE_KOEFF, butterflyValveQty);
+	$: butterflyValveVelocity = calcValveHeadVelocity(
+		BUTTERFLY_VALVE_KOEFF,
+		butterflyValveQty,
+		Number(averageVelocity)
+	);
 
 	const GLOBE_VALVE_KOEFF = 10;
 	$: globeValveQty = 0;
-	$: globeValveVelocity = calcValveHeadVelocity(GLOBE_VALVE_KOEFF, globeValveQty);
+	$: globeValveVelocity = calcValveHeadVelocity(GLOBE_VALVE_KOEFF, globeValveQty, Number(averageVelocity));
 
 	const CHECK_VALVE_KOEFF = 2.3;
 	$: checkValveQty = 0;
-	$: checkValveVelocity = calcValveHeadVelocity(CHECK_VALVE_KOEFF, checkValveQty);
+	$: checkValveVelocity = calcValveHeadVelocity(CHECK_VALVE_KOEFF, checkValveQty, Number(averageVelocity));
 
 	const PIPE_ENTRANCE_KOEFF = 1;
 	$: pipeEntranceQty = 0;
-	$: pipeEntranceVelocity = calcValveHeadVelocity(PIPE_ENTRANCE_KOEFF, pipeEntranceQty);
+	$: pipeEntranceVelocity = calcValveHeadVelocity(PIPE_ENTRANCE_KOEFF, pipeEntranceQty, Number(averageVelocity));
 
 	const ELBOW_VALVE_KOEFF = 0.4;
 	$: elbowValveQty = 0;
-	$: elbowValveVelocity = calcValveHeadVelocity(ELBOW_VALVE_KOEFF, elbowValveQty);
+	$: elbowValveVelocity = calcValveHeadVelocity(ELBOW_VALVE_KOEFF, elbowValveQty, Number(averageVelocity));
 
 	const PIPE_ENTRANCE_SHARP_KOEFF = 0.5;
 	$: pipeEntranceSharpQty = 0;
-	$: pipeEntranceSharpVelocity = calcValveHeadVelocity(PIPE_ENTRANCE_SHARP_KOEFF, pipeEntranceSharpQty);
+	$: pipeEntranceSharpVelocity = calcValveHeadVelocity(
+		PIPE_ENTRANCE_SHARP_KOEFF,
+		pipeEntranceSharpQty,
+		Number(averageVelocity)
+	);
 
 	const ELBOW_VALVE_90_KOEFF = 0.6;
 	$: elbowValve90Qty = 0;
-	$: elbowValve90Velocity = calcValveHeadVelocity(ELBOW_VALVE_90_KOEFF, elbowValve90Qty);
+	$: elbowValve90Velocity = calcValveHeadVelocity(ELBOW_VALVE_90_KOEFF, elbowValve90Qty, Number(averageVelocity));
 
 	const PIPE_EXIT_KOEFF = 1;
 	$: pipeExitQty = 0;
-	$: pipeExitVelocity = calcValveHeadVelocity(PIPE_EXIT_KOEFF, pipeExitQty);
+	$: pipeExitVelocity = calcValveHeadVelocity(PIPE_EXIT_KOEFF, pipeExitQty, Number(averageVelocity));
 
 	const ELBOW_VALVE_90_STD_KOEFF = 0.9;
 	$: elbowValve90StandardQty = 0;
-	$: elbowValve90StandardVelocity = calcValveHeadVelocity(ELBOW_VALVE_90_STD_KOEFF, elbowValve90StandardQty);
+	$: elbowValve90StandardVelocity = calcValveHeadVelocity(
+		ELBOW_VALVE_90_STD_KOEFF,
+		elbowValve90StandardQty,
+		Number(averageVelocity)
+	);
 
 	const TEE_STD_KOEFF = 1.8;
 	$: teeStdQty = 0;
-	$: teeStdVelocity = calcValveHeadVelocity(TEE_STD_KOEFF, teeStdQty);
+	$: teeStdVelocity = calcValveHeadVelocity(TEE_STD_KOEFF, teeStdQty, Number(averageVelocity));
 
 	const FLOW_METER_KOEFF = 7;
 	$: flowMeterQty = 0;
-	$: flowMeterVelocity = calcValveHeadVelocity(FLOW_METER_KOEFF, flowMeterQty);
+	$: flowMeterVelocity = calcValveHeadVelocity(FLOW_METER_KOEFF, flowMeterQty, Number(averageVelocity));
 
 	const TEE_FTR_KOEFF = 0.6;
 	$: teeFtrQty = 0;
-	$: teeFtrVelocity = calcValveHeadVelocity(TEE_FTR_KOEFF, teeFtrQty);
+	$: teeFtrVelocity = calcValveHeadVelocity(TEE_FTR_KOEFF, teeFtrQty, Number(averageVelocity));
 
 	$: totalFittingsLosses =
 		angleValveVelocity +
