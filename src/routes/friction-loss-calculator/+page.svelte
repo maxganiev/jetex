@@ -42,25 +42,19 @@
 
 		{ id: 10, text: 'Углеродистая сталь с коррозией высокой степени', value: '1' },
 
-		{ id: 11, text: 'Афальтированный чугун', value: '0.1' },
+		{ id: 11, text: 'Чугун неиспользованный', value: '0.25' },
 
-		{ id: 12, text: 'Чугун неиспользованный', value: '0.25' },
+		{ id: 12, text: 'Изношенный чугун', value: '0.8' },
 
-		{ id: 13, text: 'Изношенный чугун', value: '0.8' },
+		{ id: 13, text: 'Ржавый чугун', value: '1.5' },
 
-		{ id: 14, text: 'Ржавый чугун', value: '1.5' },
+		{ id: 14, text: 'Оцинкованный чугун', value: '0.025' },
 
-		{ id: 15, text: 'Оцинкованный чугун', value: '0.025' },
+		{ id: 15, text: 'Дерево', value: '0.18' },
 
-		{ id: 16, text: 'Дерево', value: '0.18' },
+		{ id: 16, text: 'Дерево б/у', value: '0.25' },
 
-		{ id: 17, text: 'Дерево б/у', value: '0.25' },
-
-		{ id: 18, text: 'Смягченный цемент', value: '0.3' },
-
-		{ id: 19, text: 'Обычный цемент', value: '0.3' },
-
-		{ id: 20, text: 'Затверделый цемент', value: '0.8' }
+		{ id: 17, text: 'Цемент', value: '0.3' }
 	];
 
 	$: pipeMaterialSelected = pipeMaterialOptions[0];
@@ -177,7 +171,8 @@
 		elbowValve90StandardVelocity +
 		pipeExitVelocity +
 		teeStdVelocity +
-		flowMeterVelocity;
+		flowMeterVelocity +
+		teeFtrVelocity;
 
 	$: totalStaightPipesLosses =
 		(Number(darcyFrictionFactor) * pipeLength * Number(averageVelocity) ** 2) / (2 * Number(pipeDMet) * 9.81);
@@ -245,61 +240,61 @@
 	<InputCell label="Коэффициент трения Дарси (fx)" bind:value="{darcyFrictionFactor}" readonly></InputCell>
 </InputRow>
 
+<!--Фитинги-->
 <InputRow>
-	<!-- Угловой клапан-->
+	<!-- Угловой вентиль-->
 	<InputColumn>
-		<InputCell label="Количество угловых клапанов" fullWidth bind:value="{angleValveQty}"></InputCell>
+		<InputCell label="Количество угловых вентилей" fullWidth bind:value="{angleValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{angleValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{angleValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
-	<!--Ножной клапан-->
+	<!--Донный клапан-->
 	<InputColumn>
-		<InputCell label="Количество ножных клапанов" fullWidth bind:value="{footValveQty}"></InputCell>
+		<InputCell label="Количество донных клапанов" fullWidth bind:value="{footValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{footValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{footValveVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
 <InputRow>
 	<!--Шаровой кран, полнопроходной-->
 	<InputColumn>
-		<InputCell label="Количество шаровых клапанов" fullWidth bind:value="{ballValveQty}"></InputCell>
+		<InputCell label="Количество шаровых кранов" fullWidth bind:value="{ballValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{ballValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{ballValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Задвижка-->
 	<InputColumn>
 		<InputCell label="Количество задвижек" fullWidth bind:value="{gateValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{gateValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{gateValveVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
 <InputRow>
-	<!--Клапан-бабочка -->
+	<!--Дисковый затвор -->
 	<InputColumn>
-		<InputCell label="Количество клапанов-бабочек" fullWidth bind:value="{butterflyValveQty}"></InputCell>
+		<InputCell label="Количество дисковых затворов" fullWidth bind:value="{butterflyValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{butterflyValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{butterflyValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
-	<!--Нормальный клапан-->
+	<!--Запорный клапан-->
 	<InputColumn>
-		<InputCell label="Количество нормальных клапанов" fullWidth bind:value="{globeValveQty}"></InputCell>
+		<InputCell label="Количество запорных клапанов" fullWidth bind:value="{globeValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{globeValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{globeValveVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
 <InputRow>
-	<!--Обратный поворотный клапан-->
+	<!--Поворотный клапан-->
 	<InputColumn>
-		<InputCell label="Количество обратных поворотных клапанов" fullWidth bind:value="{checkValveQty}"
-		></InputCell>
+		<InputCell label="Количество поворотных клапанов" fullWidth bind:value="{checkValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{checkValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{checkValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Вход трубы, труба, направленная внутрь -->
@@ -307,7 +302,7 @@
 		<InputCell label="Кол-во входов трубы, направленной вовнутрь" fullWidth bind:value="{pipeEntranceQty}"
 		></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{pipeEntranceVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{pipeEntranceVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
@@ -316,7 +311,7 @@
 	<InputColumn>
 		<InputCell label="Количество угловых клапанов 45°" fullWidth bind:value="{elbowValveQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValveVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{elbowValveVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Вход трубы, острый край -->
@@ -324,7 +319,7 @@
 		<InputCell label="Кол-во входов трубы с острым краем" fullWidth bind:value="{pipeEntranceSharpQty}"
 		></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{pipeEntranceSharpVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{pipeEntranceSharpVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
@@ -334,14 +329,14 @@
 		<InputCell label="Количество угловых клапанов 90° (широкий радиус)" fullWidth bind:value="{elbowValve90Qty}"
 		></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValve90Velocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{elbowValve90Velocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Кол-во выходов трубы -->
 	<InputColumn>
 		<InputCell label="Кол-во выходов трубы" fullWidth bind:value="{pipeExitQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{pipeExitVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{pipeExitVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
@@ -354,15 +349,14 @@
 			bind:value="{elbowValve90StandardQty}"
 		></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{elbowValve90StandardVelocity}" readonly
-		></InputCell>
+		<InputCell fullWidth bind:value="{elbowValve90StandardVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Кол-во стандартных тройников с проточным ответвлением -->
 	<InputColumn>
 		<InputCell label="Кол-во тройников с проточным ответвлением" fullWidth bind:value="{teeStdQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{teeStdVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{teeStdVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
@@ -371,14 +365,14 @@
 	<InputColumn>
 		<InputCell label="Кол-во расходомеров турбинного типа" fullWidth bind:value="{flowMeterQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{flowMeterVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{flowMeterVelocity}" readonly></InputCell>
 	</InputColumn>
 
 	<!--Тройник стандартный проточный-->
 	<InputColumn>
 		<InputCell label="Кол-во проточных тройников" fullWidth bind:value="{teeFtrQty}"></InputCell>
 
-		<InputCell label="Скорость напора" fullWidth bind:value="{teeFtrVelocity}" readonly></InputCell>
+		<InputCell fullWidth bind:value="{teeFtrVelocity}" readonly></InputCell>
 	</InputColumn>
 </InputRow>
 
