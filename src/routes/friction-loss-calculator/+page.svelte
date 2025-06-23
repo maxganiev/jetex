@@ -220,11 +220,11 @@
 	<InputCell label="Кинематическая вязкость, м<sup>3</sup>/с" bind:value="{viscosityPerSec}" readonly></InputCell>
 </InputRow>
 
-<!--Диаметр трубы-->
+<!--Внутренний диаметр трубы-->
 <InputRow>
-	<InputCell label="Диаметр трубы, мм" bind:value="{pipeDMilim}"></InputCell>
+	<InputCell label="Внутренний диаметр трубы, мм" bind:value="{pipeDMilim}"></InputCell>
 
-	<InputCell label="Диаметр трубы, м" bind:value="{pipeDMet}" readonly></InputCell>
+	<InputCell label="Внутренний диаметр трубы, м" bind:value="{pipeDMet}" readonly></InputCell>
 </InputRow>
 
 <!--Длина и материал трубы-->
