@@ -114,11 +114,11 @@
 								<span> {step.id} </span>
 							{/if}
 						</button>
-						<label class="fs-sm-md clr-blue-dark" for="">{step.type}</label>
+						<label class="fs-md clr-blue-dark" for="">{step.type}</label>
 					</div>
 				{/each}
 
-				<div class="col-md-4 col-sm-12 d-flex ms-auto">
+				<div class="col-md-4 col-sm-12 d-flex align-self-center ms-auto">
 					<button
 						class="btn w-100 rounded-3 bg-clr-blue-dark clr-white fs-sm-md {$CURRENT_STEP.buttonLabel
 							? 'visible'
