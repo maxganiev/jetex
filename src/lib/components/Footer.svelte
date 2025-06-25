@@ -104,7 +104,7 @@
 							class="btn rounded-circle bg-clr-blue-dark clr-white ratio-1x1 mt-2 o-{step.enabled
 								? 1
 								: '0-6'}"
-							style="min-width: 42px;"
+							style="min-width: 48px;"
 							disabled="{!$SELECTION_STEPS[idx].enabled}"
 							on:click="{() => setCurrentStepIdx(idx)}"
 						>

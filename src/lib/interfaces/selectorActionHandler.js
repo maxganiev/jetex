@@ -232,9 +232,9 @@ export class PumpModelSelector extends SelectorActionHandler {
 
 		/**@type {Object<Number, Object>} */
 		const styleFixesByPumpTypeIds = {
-				1: { marginTop: -65, mainImgHeight: 200, attrGroupId: 4, drawingHeight: '35%' },
+				1: { marginTop: -5, mainImgHeight: 120, attrGroupId: 4, drawingHeight: '35%' },
 				2: { marginTop: -5, mainImgHeight: 120, attrGroupId: 4, drawingHeight: '35%' },
-				3: { marginTop: -100, mainImgHeight: 250, attrGroupId: 5, drawingWidth: '95%' },
+				3: { marginTop: -15, mainImgHeight: 100, attrGroupId: 5, drawingWidth: '95%' },
 				4: { marginTop: 0, mainImgHeight: 150, attrGroupId: 5, drawingWidth: '75%' }
 			},
 			currStyleFix = styleFixesByPumpTypeIds[currentPumpModel.pump_type_id];
